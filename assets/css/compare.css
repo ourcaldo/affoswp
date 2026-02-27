@@ -1,0 +1,506 @@
+﻿/**
+ * Compare Page Styles
+ * 
+ * Styles for the product comparison page
+ *
+ * @package Affos
+ * @since 1.1.1
+ */
+
+/* ========================================
+   COMPARE PAGE 
+   ======================================== */
+
+.compare-page {
+    padding: 120px 0 80px;
+    min-height: 100vh;
+    background: var(--bg-body);
+}
+
+.compare-page.has-products {
+    padding-top: 40px;
+}
+
+/* Page Title */
+.compare-title-section {
+    margin-bottom: 32px;
+}
+
+.compare-title-section h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.compare-title-section p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* ========================================
+   COMPARE ACTIONS BAR
+   ======================================== */
+
+.compare-actions-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+}
+
+.compare-actions-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.action-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent-color);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.action-link:hover {
+    opacity: 0.8;
+}
+
+.action-link.danger {
+    color: #EF4444;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.toggle-label input {
+    accent-color: var(--accent-color);
+}
+
+/* ========================================
+   COMPARE TABLE CONTAINER
+   ======================================== */
+
+.compare-table-container {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+}
+
+/* ========================================
+   PRODUCT CARDS HEADER
+   ======================================== */
+
+.compare-products-header {
+    display: grid;
+    grid-template-columns: 200px repeat(4, 1fr);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.compare-label-cell {
+    padding: 24px 20px;
+    background: var(--bg-body);
+    display: flex;
+    align-items: flex-end;
+}
+
+.compare-product-card {
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    border-left: 1px solid var(--border-color);
+}
+
+.compare-product-card:hover {
+    background: #FAFBFC;
+}
+
+.remove-product-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    background: var(--bg-body);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-muted);
+    transition: all 0.2s;
+}
+
+.remove-product-btn:hover {
+    background: #FEE2E2;
+    border-color: #FECACA;
+    color: #EF4444;
+}
+
+.product-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.product-badge.sale {
+    background: #FEF3C7;
+    color: #D97706;
+}
+
+.product-badge.recommended {
+    background: #D1FAE5;
+    color: #059669;
+}
+
+.compare-product-card .product-image {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-body);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.compare-product-card .product-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.compare-product-card .product-image i {
+    font-size: 4rem;
+    color: var(--text-muted);
+}
+
+.compare-product-card .product-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.compare-product-card .product-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.compare-product-card .product-rating i {
+    color: #FBBF24;
+    font-size: 0.85rem;
+}
+
+.compare-product-card .product-rating span {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.product-availability {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: #10B981;
+}
+
+/* ========================================
+   SPEC SECTIONS & ROWS
+   ======================================== */
+
+.compare-spec-section {
+    padding: 16px 20px;
+    background: var(--bg-body);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.compare-spec-section h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.compare-spec-row {
+    display: grid;
+    grid-template-columns: 200px repeat(4, 1fr);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.compare-spec-row:last-child {
+    border-bottom: none;
+}
+
+.spec-label {
+    padding: 14px 20px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    background: #FCFCFD;
+}
+
+.spec-value {
+    padding: 14px 20px;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    text-align: left;
+    border-left: 1px solid var(--border-color);
+}
+
+.spec-value.highlight {
+    background: #F0FDF4;
+    color: #10B981;
+    font-weight: 600;
+}
+
+.spec-value.empty {
+    color: var(--text-muted);
+}
+
+/* ========================================
+   STORE LOGOS ROW
+   ======================================== */
+
+.store-logos-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 0;
+}
+
+.store-logo-btn {
+    width: 36px;
+    height: 36px;
+    background: var(--bg-body);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.store-logo-btn:hover {
+    background: var(--accent-light);
+    border-color: var(--accent-color);
+}
+
+.store-logo-btn img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.store-logo-btn i {
+    font-size: 1.1rem;
+    color: var(--accent-color);
+}
+
+/* ========================================
+   ADD PRODUCT SLOT
+   ======================================== */
+
+.add-product-slot {
+    padding: 40px 20px;
+    text-align: center;
+    border-left: 1px solid var(--border-color);
+    background: var(--bg-body);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-product-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 24px;
+    background: white;
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    text-decoration: none;
+}
+
+.add-product-btn:hover {
+    border-color: var(--accent-color);
+    background: var(--accent-light);
+}
+
+.add-product-btn i {
+    font-size: 2rem;
+    color: var(--accent-color);
+}
+
+.add-product-btn span {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+/* ========================================
+   EMPTY STATE (NO PRODUCTS)
+   ======================================== */
+
+.compare-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 40px;
+    text-align: center;
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border-color);
+}
+
+.compare-empty-state>i {
+    font-size: 4rem;
+    color: var(--accent-color);
+    opacity: 0.5;
+    margin-bottom: 24px;
+}
+
+.compare-empty-state .btn i {
+    font-size: 1.2rem;
+}
+
+.compare-empty-state p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+
+.compare-empty-state .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    width: auto;
+    max-width: 240px;
+    height: auto;
+    aspect-ratio: unset;
+}
+
+/* ========================================
+   COMPARE HEADER (HERO FOR EMPTY STATE)
+   ======================================== */
+
+.compare-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.compare-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--accent-light) 0%, #DBEAFE 100%);
+    color: var(--accent-color);
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.compare-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.compare-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1024px) {
+
+    .compare-products-header,
+    .compare-spec-row {
+        grid-template-columns: 150px repeat(3, 1fr);
+    }
+
+    .add-product-slot:last-child {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .compare-products-header,
+    .compare-spec-row {
+        grid-template-columns: 120px repeat(2, 1fr);
+    }
+
+    .compare-product-card .product-image {
+        width: 100px;
+        height: 100px;
+    }
+
+    .compare-actions-bar {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .compare-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .compare-empty-state {
+        padding: 48px 24px;
+    }
+
+    .compare-empty-state i {
+        font-size: 3rem;
+    }
+}

@@ -1,0 +1,25 @@
+/*
+Theme Name: Affos
+Theme URI: https://affos.id
+Author: Affos Team
+Author URI: https://affos.id
+Description: Modern gadget comparison and review theme for WordPress. Features product specifications, reviews with ratings, and affiliate link management.
+Version: 1.1.0
+Requires at least: 6.0
+Tested up to: 6.4
+Requires PHP: 8.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: affos
+Tags: blog, portfolio, e-commerce, custom-logo, custom-menu, featured-images, theme-options, translation-ready
+*/
+
+/**
+ * == CSS MODULARIZATION ==
+ * 
+ * All theme styles have been moved to assets/css/ for easier maintenance.
+ * Main stylesheet is loaded via PHP: assets/css/theme.css
+ * 
+ * This file is kept minimal to satisfy WordPress theme requirements.
+ * Do not add styles here - edit the modular CSS files instead.
+ */

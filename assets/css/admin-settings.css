@@ -1,0 +1,579 @@
+/**
+ * Affos Admin Settings Styles
+ * 
+ * All selectors prefixed with body.toplevel_page_affos-settings for high specificity
+ * to override WordPress admin default styles.
+ *
+ * @package Affos
+ * @since 1.1.0
+ */
+
+/* ==========================================================================
+   RESET WORDPRESS ADMIN DEFAULTS ON THIS PAGE
+   ========================================================================== */
+body.toplevel_page_affos-settings #wpcontent {
+    padding-left: 0;
+}
+
+body.toplevel_page_affos-settings #wpbody-content {
+    padding-bottom: 0;
+}
+
+body.toplevel_page_affos-settings .wrap {
+    margin: 0;
+}
+
+/* ==========================================================================
+   MAIN WRAPPER
+   ========================================================================== */
+body.toplevel_page_affos-settings .affos-wrap {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 20px 20px 20px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+body.toplevel_page_affos-settings .affos-header {
+    background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
+    color: #ffffff;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+body.toplevel_page_affos-settings .affos-header-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+body.toplevel_page_affos-settings .affos-header-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+body.toplevel_page_affos-settings .affos-header-text h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.3;
+}
+
+body.toplevel_page_affos-settings .affos-header-text p {
+    margin: 2px 0 0;
+    font-size: 13px;
+    opacity: 0.85;
+    color: #ffffff;
+}
+
+body.toplevel_page_affos-settings .affos-version {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   BODY - SIDEBAR + CONTENT
+   ========================================================================== */
+body.toplevel_page_affos-settings .affos-body {
+    display: flex;
+    min-height: 500px;
+}
+
+/* ==========================================================================
+   SIDEBAR
+   ========================================================================== */
+body.toplevel_page_affos-settings .affos-sidebar {
+    width: 240px;
+    background: #1e293b;
+    padding: 16px 0;
+    flex-shrink: 0;
+}
+
+body.toplevel_page_affos-settings .affos-nav-group {
+    margin-bottom: 8px;
+}
+
+body.toplevel_page_affos-settings .affos-nav-label {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 20px 8px;
+}
+
+body.toplevel_page_affos-settings .affos-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+}
+
+body.toplevel_page_affos-settings .affos-nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+}
+
+body.toplevel_page_affos-settings .affos-nav-item.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border-left-color: #3B82F6;
+}
+
+body.toplevel_page_affos-settings .affos-nav-item .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    opacity: 0.8;
+}
+
+body.toplevel_page_affos-settings .affos-nav-item.active .dashicons {
+    opacity: 1;
+    color: #3B82F6;
+}
+
+/* ==========================================================================
+   CONTENT AREA
+   ========================================================================== */
+body.toplevel_page_affos-settings .affos-content {
+    flex: 1;
+    padding: 28px;
+    background: #f9fafb;
+    overflow-y: auto;
+}
+
+/* Tabs */
+body.toplevel_page_affos-settings .affos-tab {
+    display: none;
+}
+
+body.toplevel_page_affos-settings .affos-tab.active {
+    display: block;
+}
+
+body.toplevel_page_affos-settings .affos-tab-header {
+    margin-bottom: 24px;
+}
+
+body.toplevel_page_affos-settings .affos-tab-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 6px;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1.3;
+}
+
+body.toplevel_page_affos-settings .affos-tab-header h2 .dashicons {
+    color: #2563EB;
+}
+
+body.toplevel_page_affos-settings .affos-tab-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* ==========================================================================
+   CARDS
+   ========================================================================== */
+body.toplevel_page_affos-settings .affos-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+body.toplevel_page_affos-settings .affos-card:last-child {
+    margin-bottom: 0;
+}
+
+body.toplevel_page_affos-settings .affos-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+body.toplevel_page_affos-settings .affos-card-title .dashicons {
+    color: #2563EB;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+body.toplevel_page_affos-settings .affos-card-content {
+    padding: 20px;
+    background: #ffffff;
+}
+
+/* Collapsible cards */
+body.toplevel_page_affos-settings .affos-card-collapsible .affos-card-toggle {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+body.toplevel_page_affos-settings .affos-card-collapsible .affos-card-toggle:hover {
+    background: #f0f4f8;
+}
+
+body.toplevel_page_affos-settings .affos-toggle-icon {
+    margin-left: auto;
+    transition: transform 0.2s;
+}
+
+body.toplevel_page_affos-settings .affos-card-collapsible.open .affos-toggle-icon {
+    transform: rotate(180deg);
+}
+
+body.toplevel_page_affos-settings .affos-card-collapsible .affos-card-content {
+    display: none;
+}
+
+body.toplevel_page_affos-settings .affos-card-collapsible.open .affos-card-content {
+    display: block;
+}
+
+/* ==========================================================================
+   FORM FIELDS
+   ========================================================================== */
+body.toplevel_page_affos-settings .affos-field {
+    margin-bottom: 20px;
+}
+
+body.toplevel_page_affos-settings .affos-field:last-child {
+    margin-bottom: 0;
+}
+
+body.toplevel_page_affos-settings .affos-field>label {
+    display: block;
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+body.toplevel_page_affos-settings .affos-field input[type="text"],
+body.toplevel_page_affos-settings .affos-field input[type="number"],
+body.toplevel_page_affos-settings .affos-field input[type="url"],
+body.toplevel_page_affos-settings .affos-field textarea,
+body.toplevel_page_affos-settings .affos-field select {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #ffffff;
+    color: #1f2937;
+}
+
+body.toplevel_page_affos-settings .affos-field input:focus,
+body.toplevel_page_affos-settings .affos-field textarea:focus,
+body.toplevel_page_affos-settings .affos-field select:focus {
+    outline: none;
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+body.toplevel_page_affos-settings .affos-field textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+body.toplevel_page_affos-settings .affos-field-desc {
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* Field row layout */
+body.toplevel_page_affos-settings .affos-field-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+body.toplevel_page_affos-settings .affos-field-row>label {
+    width: 150px;
+    flex-shrink: 0;
+    padding-top: 10px;
+    margin-bottom: 0;
+}
+
+body.toplevel_page_affos-settings .affos-field-row input,
+body.toplevel_page_affos-settings .affos-field-row select,
+body.toplevel_page_affos-settings .affos-field-row textarea {
+    flex: 1;
+}
+
+/* Toggle/Checkbox */
+body.toplevel_page_affos-settings .affos-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #1f2937;
+}
+
+body.toplevel_page_affos-settings .affos-toggle-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #2563EB;
+}
+
+/* Char count */
+body.toplevel_page_affos-settings .affos-char-count {
+    font-size: 11px;
+    color: #6b7280;
+    margin-left: 8px;
+}
+
+/* ==========================================================================
+   MEDIA UPLOADER
+   ========================================================================== */
+body.toplevel_page_affos-settings .affos-media-field {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+body.toplevel_page_affos-settings .affos-media-preview {
+    width: 120px;
+    height: 80px;
+    background: #f9fafb;
+    border: 2px dashed #e5e7eb;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+body.toplevel_page_affos-settings .affos-media-preview.affos-media-small {
+    width: 60px;
+    height: 60px;
+}
+
+body.toplevel_page_affos-settings .affos-media-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+body.toplevel_page_affos-settings .affos-media-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+body.toplevel_page_affos-settings .affos-media-actions .button {
+    text-align: center;
+}
+
+body.toplevel_page_affos-settings .affos-remove-btn {
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+body.toplevel_page_affos-settings .affos-remove-btn:hover {
+    background: #fee2e2;
+}
+
+/* ==========================================================================
+   NOTICES
+   ========================================================================== */
+body.toplevel_page_affos-settings .affos-notice {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    color: #0369a1;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+
+body.toplevel_page_affos-settings .affos-notice-info {
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+    color: #047857;
+}
+
+/* ==========================================================================
+   READONLY LIST
+   ========================================================================== */
+body.toplevel_page_affos-settings .affos-readonly-list {
+    background: #f9fafb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+body.toplevel_page_affos-settings .affos-readonly-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+body.toplevel_page_affos-settings .affos-readonly-item:last-child {
+    border-bottom: none;
+}
+
+body.toplevel_page_affos-settings .affos-readonly-item span {
+    color: #1f2937;
+}
+
+body.toplevel_page_affos-settings .affos-readonly-item code {
+    background: #ffffff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #2563EB;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+body.toplevel_page_affos-settings .affos-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 28px;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    border-radius: 0 0 12px 12px;
+}
+
+body.toplevel_page_affos-settings .affos-footer p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+body.toplevel_page_affos-settings .affos-save-status {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+body.toplevel_page_affos-settings .affos-save-status.saving {
+    color: #6b7280;
+}
+
+body.toplevel_page_affos-settings .affos-save-status.saved {
+    color: #059669;
+}
+
+body.toplevel_page_affos-settings .affos-save-status.error {
+    color: #dc2626;
+}
+
+/* ==========================================================================
+   COLOR PICKER OVERRIDE
+   ========================================================================== */
+body.toplevel_page_affos-settings .affos-field-inline {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+body.toplevel_page_affos-settings .affos-field-inline>label {
+    width: 150px;
+    margin-bottom: 0;
+}
+
+body.toplevel_page_affos-settings .wp-picker-container {
+    display: inline-block;
+}
+
+body.toplevel_page_affos-settings .wp-picker-container .wp-color-result.button {
+    margin-right: 6px;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 900px) {
+    body.toplevel_page_affos-settings .affos-body {
+        flex-direction: column;
+    }
+
+    body.toplevel_page_affos-settings .affos-sidebar {
+        width: 100%;
+        padding: 0;
+        display: flex;
+        overflow-x: auto;
+    }
+
+    body.toplevel_page_affos-settings .affos-nav-group {
+        display: flex;
+        margin-bottom: 0;
+    }
+
+    body.toplevel_page_affos-settings .affos-nav-label {
+        display: none;
+    }
+
+    body.toplevel_page_affos-settings .affos-nav-item {
+        padding: 12px 16px;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+        white-space: nowrap;
+    }
+
+    body.toplevel_page_affos-settings .affos-nav-item.active {
+        border-left-color: transparent;
+        border-bottom-color: #3B82F6;
+    }
+
+    body.toplevel_page_affos-settings .affos-field-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    body.toplevel_page_affos-settings .affos-field-row>label {
+        width: 100%;
+        padding-top: 0;
+    }
+}

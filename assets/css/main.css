@@ -1,0 +1,35 @@
+/**
+ * Affos Theme - Main CSS
+ * 
+ * This file imports all modular CSS files.
+ * Edit individual modules in assets/css/ for maintenance.
+ *
+ * @package Affos
+ * @since 1.0.9
+ */
+
+/* Base - Variables, Reset, Typography, Utilities */
+@import url('base.css');
+
+/* Components */
+@import url('buttons.css');
+@import url('cards.css');
+
+/* Layout */
+@import url('header.css');
+@import url('footer.css');
+
+/* Pages */
+@import url('hero.css');
+@import url('front-page.css');
+@import url('archive-products.css');
+@import url('archive-reviews.css');
+@import url('single-product.css');
+@import url('single-review.css');
+@import url('single-post.css');
+@import url('compare.css');
+@import url('404.css');
+
+/* Global */
+@import url('animations.css');
+@import url('responsive.css');
