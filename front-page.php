@@ -136,7 +136,7 @@ $spotlight = !empty($hero_products) ? $hero_products[0] : null;
         <div class="section-header">
             <h2 class="section-title"><?php esc_html_e('Produk Terbaru', 'affos'); ?></h2>
             <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>" class="see-all">
-                <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line"></i>
+                <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line" aria-hidden="true"></i>
             </a>
         </div>
 
@@ -173,7 +173,7 @@ $spotlight = !empty($hero_products) ? $hero_products[0] : null;
         <div class="section-header">
             <h2 class="section-title"><?php esc_html_e('Ulasan Terbaru', 'affos'); ?></h2>
             <a href="<?php echo esc_url(get_post_type_archive_link('review')); ?>" class="see-all">
-                <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line"></i>
+                <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line" aria-hidden="true"></i>
             </a>
         </div>
 
@@ -219,7 +219,7 @@ $spotlight = !empty($hero_products) ? $hero_products[0] : null;
             $blog_url = $blog_page ? get_permalink($blog_page) : home_url('/blog/');
             ?>
             <a href="<?php echo esc_url($blog_url); ?>" class="see-all">
-                <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line"></i>
+                <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line" aria-hidden="true"></i>
             </a>
         </div>
 

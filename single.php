@@ -23,7 +23,7 @@ while (have_posts()) : the_post();
 
     // Reading time
     $content = get_the_content();
-    $word_count = str_word_count(strip_tags($content));
+    $word_count = str_word_count(strip_tags(strip_shortcodes($content)));
     $reading_time = max(1, ceil($word_count / 200));
 ?>
 
@@ -62,7 +62,7 @@ while (have_posts()) : the_post();
             <span>&middot;</span>
             <span><?php echo get_the_date('j M Y'); ?></span>
             <span>&middot;</span>
-            <span><?php printf(__('%d menit baca', 'affos'), $reading_time); ?></span>
+            <span><?php printf(esc_html__('%d menit baca', 'affos'), $reading_time); ?></span>
         </div>
     </div>
 </div>
@@ -116,17 +116,17 @@ while (have_posts()) : the_post();
 
             <!-- Share Row -->
             <div class="share-row">
-                <button class="share-btn" onclick="window.open('https://twitter.com/intent/tweet?url=<?php echo urlencode(get_permalink()); ?>&text=<?php echo urlencode(get_the_title()); ?>', '_blank')">
-                    <i class="ri-twitter-x-line" aria-hidden="true"></i> Twitter
+                <button class="share-btn" onclick="window.open('https://twitter.com/intent/tweet?url=<?php echo rawurlencode(get_permalink()); ?>&text=<?php echo rawurlencode(get_the_title()); ?>', '_blank')">
+                    <i class="ri-twitter-x-line" aria-hidden="true"></i> <?php esc_html_e('Twitter', 'affos'); ?>
                 </button>
-                <button class="share-btn" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(get_permalink()); ?>', '_blank')">
-                    <i class="ri-facebook-line" aria-hidden="true"></i> Facebook
+                <button class="share-btn" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode(get_permalink()); ?>', '_blank')">
+                    <i class="ri-facebook-line" aria-hidden="true"></i> <?php esc_html_e('Facebook', 'affos'); ?>
                 </button>
-                <button class="share-btn" onclick="window.open('https://wa.me/?text=<?php echo urlencode(get_the_title() . ' ' . get_permalink()); ?>', '_blank')">
-                    <i class="ri-whatsapp-line" aria-hidden="true"></i> WhatsApp
+                <button class="share-btn" onclick="window.open('https://wa.me/?text=<?php echo rawurlencode(get_the_title() . ' ' . get_permalink()); ?>', '_blank')">
+                    <i class="ri-whatsapp-line" aria-hidden="true"></i> <?php esc_html_e('WhatsApp', 'affos'); ?>
                 </button>
-                <button class="share-btn" onclick="navigator.clipboard.writeText('<?php echo esc_js(get_permalink()); ?>')">
-                    <i class="ri-link" aria-hidden="true"></i> Copy Link
+                <button class="share-btn" onclick="navigator.clipboard.writeText('<?php echo esc_js(get_permalink()); ?>').then(function(){alert('Link copied!')}).catch(function(){})">
+                    <i class="ri-link" aria-hidden="true"></i> <?php esc_html_e('Copy Link', 'affos'); ?>
                 </button>
             </div>
         </article>
@@ -145,17 +145,17 @@ while (have_posts()) : the_post();
             <div class="sidebar-card">
                 <h4><?php esc_html_e('Bagikan', 'affos'); ?></h4>
                 <div class="sidebar-share-list">
-                    <button class="share-btn" onclick="window.open('https://twitter.com/intent/tweet?url=<?php echo urlencode(get_permalink()); ?>&text=<?php echo urlencode(get_the_title()); ?>', '_blank')">
-                        <i class="ri-twitter-x-line" aria-hidden="true"></i> Twitter
+                    <button class="share-btn" onclick="window.open('https://twitter.com/intent/tweet?url=<?php echo rawurlencode(get_permalink()); ?>&text=<?php echo rawurlencode(get_the_title()); ?>', '_blank')">
+                        <i class="ri-twitter-x-line" aria-hidden="true"></i> <?php esc_html_e('Twitter', 'affos'); ?>
                     </button>
-                    <button class="share-btn" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(get_permalink()); ?>', '_blank')">
-                        <i class="ri-facebook-line" aria-hidden="true"></i> Facebook
+                    <button class="share-btn" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode(get_permalink()); ?>', '_blank')">
+                        <i class="ri-facebook-line" aria-hidden="true"></i> <?php esc_html_e('Facebook', 'affos'); ?>
                     </button>
-                    <button class="share-btn" onclick="window.open('https://wa.me/?text=<?php echo urlencode(get_the_title() . ' ' . get_permalink()); ?>', '_blank')">
-                        <i class="ri-whatsapp-line" aria-hidden="true"></i> WhatsApp
+                    <button class="share-btn" onclick="window.open('https://wa.me/?text=<?php echo rawurlencode(get_the_title() . ' ' . get_permalink()); ?>', '_blank')">
+                        <i class="ri-whatsapp-line" aria-hidden="true"></i> <?php esc_html_e('WhatsApp', 'affos'); ?>
                     </button>
-                    <button class="share-btn" onclick="navigator.clipboard.writeText('<?php echo esc_js(get_permalink()); ?>')">
-                        <i class="ri-link" aria-hidden="true"></i> Copy Link
+                    <button class="share-btn" onclick="navigator.clipboard.writeText('<?php echo esc_js(get_permalink()); ?>').then(function(){alert('Link copied!')}).catch(function(){})">
+                        <i class="ri-link" aria-hidden="true"></i> <?php esc_html_e('Copy Link', 'affos'); ?>
                     </button>
                 </div>
             </div>
@@ -180,7 +180,7 @@ while (have_posts()) : the_post();
         <div class="section-header">
             <h2 class="section-title"><?php esc_html_e('Artikel Terkait', 'affos'); ?></h2>
             <a href="<?php echo esc_url($blog_url); ?>" class="see-all">
-                <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-s-line"></i>
+                <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
             </a>
         </div>
         <div class="blog-grid">
@@ -189,7 +189,7 @@ while (have_posts()) : the_post();
                 'post_type'      => 'post',
                 'posts_per_page' => 3,
                 'post__not_in'   => array($post_id),
-                'category__in'   => wp_list_pluck($categories, 'term_id'),
+                'category__in'   => !empty($categories) ? wp_list_pluck($categories, 'term_id') : array(),
             ));
 
             foreach ($related as $related_post) {

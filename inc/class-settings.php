@@ -140,8 +140,8 @@ class Affos_Settings
         $settings = array();
 
         // Branding
-        $settings['primary_color'] = sanitize_hex_color($_POST['primary_color'] ?? '#2563EB');
-        $settings['secondary_color'] = sanitize_hex_color($_POST['secondary_color'] ?? '#7C3AED');
+        $settings['primary_color'] = sanitize_hex_color($_POST['primary_color'] ?? '#2563EB') ?: '#2563EB';
+        $settings['secondary_color'] = sanitize_hex_color($_POST['secondary_color'] ?? '#7C3AED') ?: '#7C3AED';
         $settings['logo_id'] = absint($_POST['logo_id'] ?? 0);
         $settings['logo_height'] = absint($_POST['logo_height'] ?? 40);
         $settings['favicon_id'] = absint($_POST['favicon_id'] ?? 0);

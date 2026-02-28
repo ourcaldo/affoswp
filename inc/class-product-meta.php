@@ -333,6 +333,7 @@ class Affos_Product_Meta
      */
     public function render_buy_links_meta_box($post)
     {
+        wp_nonce_field('affos_product_meta', 'affos_product_meta_nonce');
         $buy_links = get_post_meta($post->ID, '_product_buy_links', true);
         if (!is_array($buy_links)) {
             $buy_links = array();
@@ -387,7 +388,7 @@ class Affos_Product_Meta
         <script>
             jQuery(document).ready(function ($) {
                 var rowIndex = <?php echo count($buy_links); ?>;
-                var storeOptions = <?php echo json_encode($store_options); ?>;
+                var storeOptions = <?php echo wp_json_encode($store_options); ?>;
 
                 $('#add-buy-link').on('click', function () {
                     var optionsHtml = '';

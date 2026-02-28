@@ -48,10 +48,10 @@ $grid_class = $total_cols >= 3 ? ' three-products' : '';
 
             <!-- Empty State Message -->
             <div class="compare-empty-state">
-                <i class="ri-scales-3-line"></i>
+                <i class="ri-scales-3-line" aria-hidden="true"></i>
                 <p><?php esc_html_e('Belum ada produk yang dipilih untuk dibandingkan.', 'affos'); ?></p>
                 <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>" class="btn-primary">
-                    <i class="ri-smartphone-line"></i>
+                    <i class="ri-smartphone-line" aria-hidden="true"></i>
                     <?php esc_html_e('Pilih Gadget', 'affos'); ?>
                 </a>
             </div>
@@ -70,10 +70,10 @@ $grid_class = $total_cols >= 3 ? ' three-products' : '';
             <div class="compare-actions">
                 <div class="container">
                     <button class="btn-secondary" id="add-compare-product" onclick="window.location.href='<?php echo esc_url(get_post_type_archive_link('product')); ?>'">
-                        <i class="ri-add-line"></i> <?php esc_html_e('Tambah Produk', 'affos'); ?>
+                        <i class="ri-add-line" aria-hidden="true"></i> <?php esc_html_e('Tambah Produk', 'affos'); ?>
                     </button>
                     <button class="btn-ghost" id="clear-compare-all">
-                        <i class="ri-delete-bin-line"></i> <?php esc_html_e('Hapus Semua', 'affos'); ?>
+                        <i class="ri-delete-bin-line" aria-hidden="true"></i> <?php esc_html_e('Hapus Semua', 'affos'); ?>
                     </button>
                     <label class="toggle-label">
                         <input type="checkbox" id="show-diff-only">
@@ -87,7 +87,7 @@ $grid_class = $total_cols >= 3 ? ' three-products' : '';
                 <div class="container">
                 <!-- Product Cards Header -->
                 <div class="compare-products-header<?php echo $product_count >= 3 ? ' three-products' : ''; ?>">
-                    <div class="label-col">VS</div>
+                    <div class="label-col"><?php esc_html_e('VS', 'affos'); ?></div>
 
                     <?php foreach ($url_products as $index => $pid):
                         $product = get_post($pid);
@@ -131,7 +131,7 @@ $grid_class = $total_cols >= 3 ? ' three-products' : '';
                             <h3><?php echo esc_html($product->post_title); ?></h3>
                             <div class="cp-price"><?php echo esc_html($price ?: '-'); ?></div>
                             <?php if ($review_score > 0):
-                                $score_label = $review_score >= 9.0 ? 'Excellent' : ($review_score >= 7.0 ? 'Good' : ($review_score >= 5.0 ? 'Average' : 'Poor'));
+                                $score_label = $review_score >= 9.0 ? __('Excellent', 'affos') : ($review_score >= 7.0 ? __('Good', 'affos') : ($review_score >= 5.0 ? __('Average', 'affos') : __('Poor', 'affos')));
                             ?>
                                 <div class="cp-score">&#9733; <?php echo esc_html(number_format($review_score, 1)); ?> <?php echo esc_html($score_label); ?></div>
                             <?php endif; ?>
@@ -142,7 +142,7 @@ $grid_class = $total_cols >= 3 ? ' three-products' : '';
                         <!-- Add Product Slot -->
                         <div class="add-product-slot">
                             <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>" class="add-product-btn">
-                                <i class="ri-add-line"></i>
+                                <i class="ri-add-line" aria-hidden="true"></i>
                                 <span><?php esc_html_e('Tambah Produk', 'affos'); ?></span>
                             </a>
                         </div>
@@ -191,7 +191,7 @@ $grid_class = $total_cols >= 3 ? ' three-products' : '';
                                                     <img src="<?php echo esc_url($store_info['logo_url']); ?>"
                                                         alt="<?php echo esc_attr($store_info['name']); ?>">
                                                 <?php else: ?>
-                                                    <i class="<?php echo esc_attr($store_info['icon']); ?>"></i>
+                                                    <i class="<?php echo esc_attr($store_info['icon']); ?>" aria-hidden="true"></i>
                                                 <?php endif; ?>
                                             </a>
                                         <?php endforeach; ?>

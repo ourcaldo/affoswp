@@ -88,7 +88,7 @@ $first = true;
 
             <?php
             $big = 999999999;
-            echo paginate_links(array(
+            echo wp_kses_post(paginate_links(array(
                 'base'      => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
                 'format'    => '?paged=%#%',
                 'current'   => $paged,
@@ -96,7 +96,7 @@ $first = true;
                 'mid_size'  => 2,
                 'prev_text' => '<span class="screen-reader-text">' . __('Sebelumnya', 'affos') . '</span><i class="ri-arrow-left-s-line" aria-hidden="true"></i>',
                 'next_text' => '<span class="screen-reader-text">' . __('Selanjutnya', 'affos') . '</span><i class="ri-arrow-right-s-line" aria-hidden="true"></i>',
-            ));
+            )));
             wp_reset_postdata();
             ?>
         </div>

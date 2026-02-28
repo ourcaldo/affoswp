@@ -3588,3 +3588,35 @@ img.avatar {
         flex-wrap: wrap;
     }
 }
+
+/* Print Styles */
+@media print {
+    .site-header,
+    .site-footer,
+    .sidebar,
+    .share-row,
+    .compare-bar,
+    .mobile-nav,
+    .newsletter,
+    .btn-primary,
+    .btn-secondary,
+    .btn-ghost {
+        display: none !important;
+    }
+
+    body {
+        font-size: 12pt;
+        color: #000;
+        background: #fff;
+    }
+
+    a {
+        color: #000;
+        text-decoration: underline;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 0;
+    }
+}

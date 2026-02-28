@@ -43,7 +43,7 @@ while (have_posts()):
 
     // Reading time
     $content = get_the_content();
-    $word_count = str_word_count(strip_tags($content));
+    $word_count = str_word_count(strip_tags(strip_shortcodes($content)));
     $reading_time = max(1, ceil($word_count / 200));
 
     // Score level class
@@ -99,7 +99,7 @@ while (have_posts()):
                     <div class="post-meta">
                         <span><?php echo get_the_date('j M Y'); ?></span>
                         <span>&middot;</span>
-                        <span><?php printf(__('%d menit baca', 'affos'), $reading_time); ?></span>
+                        <span><?php printf(esc_html__('%d menit baca', 'affos'), $reading_time); ?></span>
                     </div>
                     <h1><?php echo esc_html(get_the_title()); ?></h1>
                     <?php if (has_excerpt()): ?>
@@ -258,20 +258,20 @@ while (have_posts()):
 
                 <!-- Share Row -->
                 <div class="share-row">
-                    <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(get_permalink()); ?>&text=<?php echo urlencode(get_the_title()); ?>"
+                    <a href="https://twitter.com/intent/tweet?url=<?php echo rawurlencode(get_permalink()); ?>&text=<?php echo rawurlencode(get_the_title()); ?>"
                         target="_blank" rel="noopener" class="share-btn">
                         <i class="ri-twitter-x-line" aria-hidden="true"></i>
-                        Twitter
+                        <?php esc_html_e('Twitter', 'affos'); ?>
                     </a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(get_permalink()); ?>"
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode(get_permalink()); ?>"
                         target="_blank" rel="noopener" class="share-btn">
                         <i class="ri-facebook-line" aria-hidden="true"></i>
-                        Facebook
+                        <?php esc_html_e('Facebook', 'affos'); ?>
                     </a>
-                    <a href="https://wa.me/?text=<?php echo urlencode(get_the_title() . ' ' . get_permalink()); ?>"
+                    <a href="https://wa.me/?text=<?php echo rawurlencode(get_the_title() . ' ' . get_permalink()); ?>"
                         target="_blank" rel="noopener" class="share-btn">
                         <i class="ri-whatsapp-line" aria-hidden="true"></i>
-                        WhatsApp
+                        <?php esc_html_e('WhatsApp', 'affos'); ?>
                     </a>
                 </div>
             </article>
@@ -285,7 +285,7 @@ while (have_posts()):
             <div class="section-header">
                 <h2 class="section-title"><?php esc_html_e('Ulasan Terkait', 'affos'); ?></h2>
                 <a href="<?php echo esc_url(get_post_type_archive_link('review')); ?>" class="see-all">
-                    <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line"></i>
+                    <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line" aria-hidden="true"></i>
                 </a>
             </div>
             <div class="review-grid">

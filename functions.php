@@ -89,6 +89,16 @@ function affos_enqueue_assets()
 add_action('wp_enqueue_scripts', 'affos_enqueue_assets');
 
 /**
+ * Add preconnect hints for external resources
+ */
+function affos_preconnect_hints() {
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>' . "\n";
+    echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+    echo '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>' . "\n";
+}
+add_action('wp_head', 'affos_preconnect_hints', 1);
+
+/**
  * Fallback menu when no menu is assigned
  */
 if (!function_exists('affos_fallback_menu')) {
@@ -299,7 +309,7 @@ function affos_compare_title($title)
                 }
             }
             if (count($names) >= 2) {
-                return 'Perbandingan ' . implode(' vs ', $names) . ' - ' . get_bloginfo('name');
+                return sprintf(__('Perbandingan %s', 'affos'), implode(' vs ', $names)) . ' - ' . get_bloginfo('name');
             }
         }
         return __('Bandingkan Gadget', 'affos') . ' - ' . get_bloginfo('name');

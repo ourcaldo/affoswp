@@ -143,7 +143,7 @@
         </div>
 
         <div class="footer-bottom">
-            <span>&copy; <?php echo esc_html(date('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?>.
+            <span>&copy; <?php echo esc_html(wp_date('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?>.
                 <?php esc_html_e('Semua hak dilindungi.', 'affos'); ?></span>
             <span><?php esc_html_e('Dibuat di Indonesia', 'affos'); ?></span>
         </div>
