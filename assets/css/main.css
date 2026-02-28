@@ -2180,6 +2180,57 @@ input, select { font: inherit; }
         transform: none;
         transition: none;
     }
+    *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   FOCUS STYLES (WCAG 2.4.7)
+   ============================================ */
+a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-ghost:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+
+.icon-btn:focus-visible,
+.card-action:focus-visible,
+.filter-btn:focus-visible,
+.share-btn:focus-visible,
+.mobile-menu-btn:focus-visible,
+.mobile-nav-close:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+
+.nav-main a:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+    border-radius: var(--radius-md);
+}
+
+.trending-item:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+
+.product-card:focus-within,
+.review-card:focus-within,
+.blog-card:focus-within {
+    box-shadow: var(--shadow-focus);
+}
+
+.pagination a:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
 }
 
 /* ============================================

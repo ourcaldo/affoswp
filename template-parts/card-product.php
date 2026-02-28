@@ -7,6 +7,9 @@
  */
 
 $product = isset($args['product']) ? $args['product'] : get_post();
+if (!$product) {
+    return;
+}
 $product_id = $product->ID;
 
 // Get meta data

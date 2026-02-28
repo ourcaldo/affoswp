@@ -7,6 +7,9 @@
  */
 
 $review = isset($args['review']) ? $args['review'] : get_post();
+if (!$review) {
+    return;
+}
 $review_id = $review->ID;
 
 // Get meta data

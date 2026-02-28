@@ -36,7 +36,7 @@ $total_cols = $product_count + ($show_add_slot ? 1 : 0);
 $grid_class = $total_cols >= 3 ? ' three-products' : '';
 ?>
 
-<main class="compare-page<?php echo $has_url_products ? ' has-products' : ''; ?>">
+<main id="main-content" class="compare-page<?php echo $has_url_products ? ' has-products' : ''; ?>">
     <div class="container">
         <?php if (!$has_url_products): ?>
             <!-- Empty State: Hero Section -->
@@ -398,37 +398,41 @@ $grid_class = $total_cols >= 3 ? ' three-products' : '';
     document.addEventListener('DOMContentLoaded', function () {
         <?php if (!$has_url_products): ?>
             // Check localStorage for products and redirect if found
-            const compareState = JSON.parse(localStorage.getItem('affos_compare') || '[]');
+            var compareState = [];
+            try { compareState = JSON.parse(localStorage.getItem('affos_compare') || '[]'); } catch(e) {}
             if (compareState.length >= 2) {
                 // Redirect to SEO-friendly URL
-                fetch('<?php echo esc_url(admin_url('admin-ajax.php')); ?>?action=affos_get_compare_slugs&ids=' + compareState.join(','))
-                    .then(response => response.json())
-                    .then(data => {
+                fetch('<?php echo esc_url(admin_url('admin-ajax.php')); ?>?action=affos_get_compare_slugs&_ajax_nonce=<?php echo esc_attr(wp_create_nonce('affos_nonce')); ?>&ids=' + compareState.join(','))
+                    .then(function(response) { return response.json(); })
+                    .then(function(data) {
                         if (data.success && data.data.url) {
                             window.location.href = data.data.url;
                         }
-                    });
+                    })
+                    .catch(function(err) { console.error('Compare redirect failed:', err); });
             }
         <?php else: ?>
             // Handle remove product button
-            document.querySelectorAll('.remove-product-btn').forEach(btn => {
+            document.querySelectorAll('.remove-product-btn').forEach(function(btn) {
                 btn.addEventListener('click', function () {
-                    const removeId = this.dataset.removeId;
-                    let compareState = JSON.parse(localStorage.getItem('affos_compare') || '[]');
-                    compareState = compareState.filter(id => id !== removeId);
-                    localStorage.setItem('affos_compare', JSON.stringify(compareState));
+                    var removeId = this.dataset.removeId;
+                    var compareState = [];
+                    try { compareState = JSON.parse(localStorage.getItem('affos_compare') || '[]'); } catch(e) {}
+                    compareState = compareState.filter(function(id) { return id !== removeId; });
+                    try { localStorage.setItem('affos_compare', JSON.stringify(compareState)); } catch(e) {}
 
                     if (compareState.length < 2) {
                         window.location.href = '<?php echo esc_url(home_url('/bandingkan/')); ?>';
                     } else {
                         // Redirect to new comparison URL
-                        fetch('<?php echo esc_url(admin_url('admin-ajax.php')); ?>?action=affos_get_compare_slugs&ids=' + compareState.join(','))
-                            .then(response => response.json())
-                            .then(data => {
+                        fetch('<?php echo esc_url(admin_url('admin-ajax.php')); ?>?action=affos_get_compare_slugs&_ajax_nonce=<?php echo esc_attr(wp_create_nonce('affos_nonce')); ?>&ids=' + compareState.join(','))
+                            .then(function(response) { return response.json(); })
+                            .then(function(data) {
                                 if (data.success && data.data.url) {
                                     window.location.href = data.data.url;
                                 }
-                            });
+                            })
+                            .catch(function(err) { console.error('Compare redirect failed:', err); });
                     }
                 });
             });
@@ -436,7 +440,7 @@ $grid_class = $total_cols >= 3 ? ' three-products' : '';
             // Handle clear all button
             document.getElementById('clear-compare-all')?.addEventListener('click', function (e) {
                 e.preventDefault();
-                localStorage.setItem('affos_compare', '[]');
+                try { localStorage.setItem('affos_compare', '[]'); } catch(e) {}
                 window.location.href = '<?php echo esc_url(home_url('/bandingkan/')); ?>';
             });
         <?php endif; ?>

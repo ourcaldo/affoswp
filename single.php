@@ -190,8 +190,8 @@ while (have_posts()) : the_post();
                 'category__in'   => wp_list_pluck($categories, 'term_id'),
             ));
 
-            foreach ($related as $post) {
-                get_template_part('template-parts/card', 'blog', array('post' => $post));
+            foreach ($related as $related_post) {
+                get_template_part('template-parts/card', 'blog', array('post' => $related_post));
             }
             wp_reset_postdata();
             ?>

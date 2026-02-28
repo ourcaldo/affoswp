@@ -233,9 +233,9 @@ $spotlight = !empty($hero_products) ? $hero_products[0] : null;
             ));
 
             if (!empty($posts)) {
-                foreach ($posts as $post) {
-                    setup_postdata($post);
-                    get_template_part('template-parts/card', 'blog', array('post' => $post));
+                foreach ($posts as $blog_post) {
+                    setup_postdata($blog_post);
+                    get_template_part('template-parts/card', 'blog', array('post' => $blog_post));
                 }
                 wp_reset_postdata();
             } else {

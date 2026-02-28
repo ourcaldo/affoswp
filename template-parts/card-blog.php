@@ -6,8 +6,11 @@
  * @since 1.0.0
  */
 
-$post = isset($args['post']) ? $args['post'] : get_post();
-$post_id = $post->ID;
+$blog_post = isset($args['post']) ? $args['post'] : get_post();
+if (!$blog_post) {
+    return;
+}
+$post_id = $blog_post->ID;
 
 // Get category
 $categories = get_the_category($post_id);
@@ -15,14 +18,14 @@ $category_name = !empty($categories) ? $categories[0]->name : '';
 $category_slug = !empty($categories) ? $categories[0]->slug : '';
 
 // Get author
-$author_id = $post->post_author;
+$author_id = $blog_post->post_author;
 $author_name = get_the_author_meta('display_name', $author_id);
 
 // Format date
 $date = get_the_date('j M Y', $post_id);
 
 // Reading time estimate
-$content = $post->post_content;
+$content = $blog_post->post_content;
 $word_count = str_word_count(strip_tags($content));
 $reading_time = max(1, ceil($word_count / 200));
 
@@ -43,7 +46,7 @@ $is_featured = isset($args['featured']) ? $args['featured'] : false;
         <?php if ($category_name): ?>
             <span class="category-label"><?php echo esc_html($category_name); ?></span>
         <?php endif; ?>
-        <h3><a href="<?php echo esc_url(get_permalink($post_id)); ?>"><?php echo esc_html($post->post_title); ?></a></h3>
+        <h3><a href="<?php echo esc_url(get_permalink($post_id)); ?>"><?php echo esc_html($blog_post->post_title); ?></a></h3>
         <div class="blog-meta">
             <span><?php echo esc_html($author_name); ?></span>
             <span class="dot"></span>
