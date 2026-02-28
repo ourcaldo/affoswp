@@ -25,8 +25,8 @@ $compare_url = $compare_page_id ? get_permalink($compare_page_id) : home_url('/b
     <a class="skip-link" href="#main-content"><?php esc_html_e('Langsung ke konten', 'affos'); ?></a>
 
     <!-- Header -->
-    <header>
-        <div class="container">
+    <header class="site-header">
+        <div class="container header-inner">
             <?php
             if (has_custom_logo()) {
                 the_custom_logo();
@@ -39,7 +39,7 @@ $compare_url = $compare_page_id ? get_permalink($compare_page_id) : home_url('/b
             }
             ?>
 
-            <nav class="nav-links" aria-label="<?php esc_attr_e('Menu utama', 'affos'); ?>">
+            <nav class="nav-main" aria-label="<?php esc_attr_e('Menu utama', 'affos'); ?>">
                 <?php
                 wp_nav_menu(array(
                     'theme_location' => 'primary',
@@ -52,32 +52,29 @@ $compare_url = $compare_page_id ? get_permalink($compare_page_id) : home_url('/b
             </nav>
 
             <div class="header-actions">
+                <button class="icon-btn mobile-menu-btn" id="mobile-menu-toggle" aria-label="<?php esc_attr_e('Menu', 'affos'); ?>" aria-expanded="false" aria-controls="mobile-menu">
+                    <i class="ri-menu-line" aria-hidden="true"></i>
+                </button>
                 <button class="icon-btn search-toggle" id="search-toggle" aria-label="<?php esc_attr_e('Search', 'affos'); ?>">
                     <i class="ri-search-line" aria-hidden="true"></i>
                 </button>
                 <?php
-                // Subscribe button - links to newsletter or custom URL
                 $subscribe_url = apply_filters('affos_subscribe_url', '#newsletter');
                 ?>
-                <a href="<?php echo esc_url($subscribe_url); ?>" class="btn btn-primary btn-sm">
+                <a href="<?php echo esc_url($subscribe_url); ?>" class="btn-primary">
                     <?php esc_html_e('Langganan', 'affos'); ?>
                 </a>
-
-                <!-- Mobile menu toggle -->
-                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="<?php esc_attr_e('Menu', 'affos'); ?>" aria-expanded="false" aria-controls="mobile-menu">
-                    <i class="ri-menu-line" aria-hidden="true"></i>
-                </button>
             </div>
         </div>
     </header>
 
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay" id="mobile-menu" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e('Menu navigasi', 'affos'); ?>">
-        <div class="mobile-menu-content">
-            <button class="mobile-menu-close" id="close-mobile-menu" aria-label="<?php esc_attr_e('Close menu', 'affos'); ?>">
+    <!-- Mobile Nav Overlay -->
+    <div class="mobile-nav-overlay" id="mobile-menu" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e('Menu navigasi', 'affos'); ?>">
+        <div class="mobile-nav-panel">
+            <button class="icon-btn mobile-nav-close" id="close-mobile-menu" aria-label="<?php esc_attr_e('Tutup', 'affos'); ?>">
                 <i class="ri-close-line" aria-hidden="true"></i>
             </button>
-            <nav class="mobile-nav" aria-label="<?php esc_attr_e('Menu mobile', 'affos'); ?>">
+            <nav aria-label="<?php esc_attr_e('Menu mobile', 'affos'); ?>">
                 <?php
                 wp_nav_menu(array(
                     'theme_location' => 'primary',

@@ -8,7 +8,7 @@
 ?>
 
 <!-- Footer -->
-<footer>
+<footer class="site-footer">
     <div class="container">
         <div class="footer-grid">
             <!-- Brand Column -->
@@ -57,7 +57,7 @@
             <!-- Categories Column -->
             <div class="footer-col">
                 <h4><?php esc_html_e('Kategori', 'affos'); ?></h4>
-                <ul class="footer-links">
+                <ul>
                     <?php
                     $product_categories = get_terms(array(
                         'taxonomy' => 'product_category',
@@ -102,7 +102,7 @@
                     wp_nav_menu(array(
                         'theme_location' => 'footer',
                         'container'      => false,
-                        'menu_class'     => 'footer-links',
+                        'menu_class'     => '',
                         'depth'          => 1,
                     ));
                 } else {
@@ -110,7 +110,7 @@
                     $about_page = get_option('affos_about_page');
                     $contact_page = get_option('affos_contact_page');
                     ?>
-                    <ul class="footer-links">
+                    <ul>
                         <li><a
                                 href="<?php echo $about_page ? esc_url(get_permalink($about_page)) : '#'; ?>"><?php esc_html_e('Tentang Kami', 'affos'); ?></a>
                         </li>
@@ -126,7 +126,7 @@
             <!-- Legal Column -->
             <div class="footer-col">
                 <h4><?php esc_html_e('Legal', 'affos'); ?></h4>
-                <ul class="footer-links">
+                <ul>
                     <?php
                     $terms_page = get_option('affos_terms_page');
                     $privacy_page = get_option('wp_page_for_privacy_policy');
@@ -143,10 +143,9 @@
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; <?php echo esc_html(date('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?>.
-                <?php esc_html_e('All rights reserved.', 'affos'); ?></p>
-            <p><?php esc_html_e('Made with', 'affos'); ?> <i class="ri-heart-fill" aria-hidden="true"></i>
-                <?php esc_html_e('in Indonesia', 'affos'); ?></p>
+            <span>&copy; <?php echo esc_html(date('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?>.
+                <?php esc_html_e('Semua hak dilindungi.', 'affos'); ?></span>
+            <span><?php esc_html_e('Dibuat di Indonesia', 'affos'); ?></span>
         </div>
     </div>
 </footer>

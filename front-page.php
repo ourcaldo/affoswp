@@ -9,197 +9,133 @@
 
 get_header();
 
-// Get latest products for hero carousel
+// Get latest product for hero spotlight
 $hero_products = get_posts(array(
     'post_type' => 'product',
-    'posts_per_page' => 6,
+    'posts_per_page' => 5,
     'orderby' => 'date',
     'order' => 'DESC',
 ));
 
-// Get product count
-$product_count = wp_count_posts('product')->publish;
-$review_count = wp_count_posts('review')->publish;
+$spotlight = !empty($hero_products) ? $hero_products[0] : null;
 ?>
 
 <main id="main-content">
 
-<!-- Hero Section - Two Column Layout -->
-<section class="hero-v2">
-    <div class="container">
-        <div class="hero-grid">
-            <div class="hero-text">
-                <div class="hero-announcement">
-                    <span class="badge badge-new">
-                        <?php esc_html_e('Baru', 'affos'); ?>
-                    </span>
-                    <?php
-                    // Get latest product for announcement
-                    if (!empty($hero_products)) {
-                        $latest = $hero_products[0];
-                        printf('<span>%s %s</span>', esc_html($latest->post_title), esc_html__('Kini Tersedia!', 'affos'));
-                    } else {
-                        echo '<span>' . esc_html__('Produk Terbaru Tersedia!', 'affos') . '</span>';
-                    }
-                    ?>
-                </div>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container hero-inner">
+        <div class="hero-content">
+            <p class="hero-tagline"><?php esc_html_e('Platform Gadget #1', 'affos'); ?></p>
+            <h1><?php esc_html_e('Temukan Gadget', 'affos'); ?> <em><?php esc_html_e('Terbaik', 'affos'); ?></em> <?php esc_html_e('untuk Anda', 'affos'); ?></h1>
+            <p class="hero-desc"><?php esc_html_e('Bandingkan spesifikasi, baca ulasan mendalam, dan temukan harga terbaik untuk smartphone, laptop, dan gadget lainnya.', 'affos'); ?></p>
+            <form class="hero-search" role="search" action="<?php echo esc_url(home_url('/')); ?>" method="get">
+                <i class="ri-search-line" aria-hidden="true"></i>
+                <input type="text" name="s" placeholder="<?php esc_attr_e('Cari produk, ulasan, atau artikel...', 'affos'); ?>">
+            </form>
+        </div>
 
-                <h1>
-                    <?php esc_html_e('Temukan Gadget', 'affos'); ?><br>
-                    <?php esc_html_e('Impian Terbaikmu', 'affos'); ?>
-                </h1>
-                <p>
-                    <?php esc_html_e('Website ulasan dan perbandingan gadget terlengkap di Indonesia. Cek spesifikasi, bandingkan fitur, dan temukan harga termurah.', 'affos'); ?>
-                </p>
+        <div class="hero-spotlight">
+            <?php if ($spotlight):
+                $s_id = $spotlight->ID;
+                $s_price = get_post_meta($s_id, '_misc_price', true);
+                $s_chipset = get_post_meta($s_id, '_platform_chipset', true);
+                $s_camera = get_post_meta($s_id, '_camera_main_specs', true);
+                $s_battery = get_post_meta($s_id, '_battery_type', true);
+                $s_cats = get_the_terms($s_id, 'product_category');
+                $s_cat_name = ($s_cats && !is_wp_error($s_cats)) ? $s_cats[0]->name : '';
+                $s_cat_slug = ($s_cats && !is_wp_error($s_cats)) ? $s_cats[0]->slug : 'smartphone';
 
-                <div class="hero-cta">
-                    <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>" class="btn btn-primary">
-                        <?php esc_html_e('Jelajahi Gadget', 'affos'); ?>
-                    </a>
-                    <?php
-                    $compare_page = get_option('affos_compare_page');
-                    $compare_url = $compare_page ? get_permalink($compare_page) : home_url('/bandingkan/');
-                    ?>
-                    <a href="<?php echo esc_url($compare_url); ?>" class="btn btn-outline-dark">
-                        <?php esc_html_e('Bandingkan', 'affos'); ?> <i class="ri-arrow-right-line"></i>
-                    </a>
-                </div>
+                $s_icon = 'ri-smartphone-line';
+                if ($s_cat_slug === 'laptop') $s_icon = 'ri-laptop-line';
+                elseif ($s_cat_slug === 'tablet') $s_icon = 'ri-tablet-line';
 
-                <div class="hero-stats">
-                    <div class="hero-stat">
-                        <span class="stat-num">
-                            <?php echo esc_html($product_count > 0 ? $product_count . '+' : '500+'); ?>
-                        </span>
-                        <span class="stat-text">
-                            <?php esc_html_e('Gadget', 'affos'); ?>
-                        </span>
-                    </div>
-                    <div class="hero-stat">
-                        <span class="stat-num">50+</span>
-                        <span class="stat-text">
-                            <?php esc_html_e('Spesifikasi', 'affos'); ?>
-                        </span>
-                    </div>
-                    <div class="hero-stat">
-                        <span class="stat-num">10K+</span>
-                        <span class="stat-text">
-                            <?php esc_html_e('Pengguna', 'affos'); ?>
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="hero-visual">
-                <!-- Animated Product Carousel -->
-                <div class="hero-carousel-container">
-                    <div class="hero-carousel-track">
-                        <?php
-                        // Build hero cards array
-                        $hero_cards = array();
-
-                        // Static fallback cards
-                        $fallback_cards = array(
-                            array('slug' => 'iphone', 'title' => 'iPhone 15 Pro', 'price' => 'Rp 24.9jt', 'label' => 'Terlaris', 'icon_class' => 'ri-smartphone-line', 'card_class' => ''),
-                            array('slug' => 'samsung', 'title' => 'Galaxy S24 Ultra', 'price' => 'Rp 21.9jt', 'label' => 'Flagship', 'icon_class' => 'ri-smartphone-line', 'card_class' => 'samsung'),
-                            array('slug' => 'macbook', 'title' => 'MacBook Air M3', 'price' => 'Rp 22.9jt', 'label' => 'Best Value', 'icon_class' => 'ri-macbook-line', 'card_class' => 'laptop'),
-                            array('slug' => 'pixel', 'title' => 'Google Pixel 8', 'price' => 'Rp 14.9jt', 'label' => 'AI Camera', 'icon_class' => 'ri-smartphone-line', 'card_class' => 'pixel'),
-                            array('slug' => 'ipad', 'title' => 'iPad Pro M4', 'price' => 'Rp 18.9jt', 'label' => 'Pro Tablet', 'icon_class' => 'ri-tablet-line', 'card_class' => 'tablet'),
-                            array('slug' => 'xiaomi', 'title' => 'Xiaomi 14 Ultra', 'price' => 'Rp 17.9jt', 'label' => 'Premium', 'icon_class' => 'ri-smartphone-line', 'card_class' => 'xiaomi'),
-                        );
-
-                        // Add dynamic products
-                        if (!empty($hero_products)) {
-                            foreach ($hero_products as $product) {
-                                $price = get_post_meta($product->ID, '_misc_price', true);
-                                $chipset = get_post_meta($product->ID, '_platform_chipset', true);
-                                $category = '';
-                                $terms = get_the_terms($product->ID, 'product_category');
-                                if ($terms && !is_wp_error($terms)) {
-                                    $category = $terms[0]->slug;
-                                }
-
-                                $icon_class = 'ri-smartphone-line';
-                                $card_class = '';
-                                if ($category === 'laptop') {
-                                    $icon_class = 'ri-macbook-line';
-                                    $card_class = 'laptop';
-                                } elseif ($category === 'tablet') {
-                                    $icon_class = 'ri-tablet-line';
-                                    $card_class = 'tablet';
-                                }
-
-                                $labels = array('Terlaris', 'Flagship', 'Best Value', 'Premium', 'Pro', 'New');
-                                $label = $chipset ? $chipset : $labels[array_rand($labels)];
-
-                                $hero_cards[] = array(
-                                    'slug' => $product->post_name,
-                                    'title' => $product->post_title,
-                                    'price' => $price ?: 'Lihat Harga',
-                                    'label' => $label,
-                                    'icon_class' => $icon_class,
-                                    'card_class' => $card_class,
-                                );
-                            }
-                        }
-
-                        // Always pad to 6 cards using fallbacks
-                        $fallback_index = 0;
-                        while (count($hero_cards) < 6 && $fallback_index < count($fallback_cards)) {
-                            $hero_cards[] = $fallback_cards[$fallback_index];
-                            $fallback_index++;
-                        }
-
-                        // Output cards - just once, the animation keyframes handle the scroll
-                        foreach ($hero_cards as $card) {
-                            ?>
-                            <div class="hero-card" data-product="<?php echo esc_attr($card['slug']); ?>">
-                                <div class="hero-card-icon <?php echo esc_attr($card['card_class']); ?>">
-                                    <i class="<?php echo esc_attr($card['icon_class']); ?>"></i>
-                                </div>
-                                <div class="hero-card-text">
-                                    <span class="hc-label"><?php echo esc_html($card['label']); ?></span>
-                                    <span class="hc-title"><?php echo esc_html($card['title']); ?></span>
-                                </div>
-                                <span class="hc-price"><?php echo esc_html($card['price']); ?></span>
-                            </div>
-                            <?php
-                        }
-                        ?>
+                $s_camera_short = '';
+                if ($s_camera) {
+                    preg_match('/(\d+)\s*MP/i', $s_camera, $m);
+                    $s_camera_short = isset($m[0]) ? $m[0] : '';
+                }
+                $s_battery_short = '';
+                if ($s_battery) {
+                    preg_match('/(\d+)\s*mAh/i', $s_battery, $m);
+                    $s_battery_short = isset($m[0]) ? $m[0] : '';
+                }
+            ?>
+                <a href="<?php echo esc_url(get_permalink($s_id)); ?>" class="hero-spotlight-img cat-<?php echo esc_attr($s_cat_slug); ?>">
+                    <span class="badge"><?php esc_html_e('Produk Unggulan', 'affos'); ?></span>
+                    <?php if (has_post_thumbnail($s_id)): ?>
+                        <?php echo get_the_post_thumbnail($s_id, 'medium_large'); ?>
+                    <?php else: ?>
+                        <i class="<?php echo esc_attr($s_icon); ?>" aria-hidden="true"></i>
+                    <?php endif; ?>
+                </a>
+                <div class="hero-spotlight-body">
+                    <p class="overline"><?php echo esc_html($s_cat_name); ?></p>
+                    <h3><?php echo esc_html($spotlight->post_title); ?></h3>
+                    <?php if ($s_price): ?>
+                        <p class="price"><?php echo esc_html($s_price); ?></p>
+                    <?php endif; ?>
+                    <div class="specs-row">
+                        <?php if ($s_chipset): ?>
+                            <span class="spec-chip"><i class="ri-cpu-line" aria-hidden="true"></i> <?php echo esc_html($s_chipset); ?></span>
+                        <?php endif; ?>
+                        <?php if ($s_camera_short): ?>
+                            <span class="spec-chip"><i class="ri-camera-line" aria-hidden="true"></i> <?php echo esc_html($s_camera_short); ?></span>
+                        <?php endif; ?>
+                        <?php if ($s_battery_short): ?>
+                            <span class="spec-chip"><i class="ri-battery-2-charge-line" aria-hidden="true"></i> <?php echo esc_html($s_battery_short); ?></span>
+                        <?php endif; ?>
                     </div>
                 </div>
-
-                <!-- 3D Product View -->
-                <div class="hero-3d-view">
-                    <div class="product-3d-wrapper">
-                        <div class="product-3d-phone">
-                            <i class="ri-smartphone-line"></i>
-                        </div>
-                        <div class="product-3d-specs">
-                            <div class="spec-pill"><i class="ri-cpu-line"></i> A17 Pro</div>
-                            <div class="spec-pill"><i class="ri-camera-lens-line"></i> 48MP</div>
-                            <div class="spec-pill"><i class="ri-battery-line"></i> All Day</div>
-                        </div>
-                        <div class="product-3d-name">iPhone 15 Pro</div>
+            <?php else: ?>
+                <div class="hero-spotlight-img cat-smartphone">
+                    <span class="badge"><?php esc_html_e('Produk Unggulan', 'affos'); ?></span>
+                    <i class="ri-smartphone-line" aria-hidden="true"></i>
+                </div>
+                <div class="hero-spotlight-body">
+                    <p class="overline"><?php esc_html_e('Smartphone', 'affos'); ?></p>
+                    <h3><?php esc_html_e('Samsung Galaxy S24 Ultra', 'affos'); ?></h3>
+                    <p class="price">Rp 19.999.000</p>
+                    <div class="specs-row">
+                        <span class="spec-chip"><i class="ri-cpu-line" aria-hidden="true"></i> Snapdragon 8 Gen 3</span>
+                        <span class="spec-chip"><i class="ri-camera-line" aria-hidden="true"></i> 200MP</span>
+                        <span class="spec-chip"><i class="ri-battery-2-charge-line" aria-hidden="true"></i> 5000mAh</span>
                     </div>
                 </div>
-
-                <!-- Click indicator -->
-                <div class="click-cursor">
-                    <i class="ri-cursor-fill"></i>
-                </div>
-            </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>
 
+<!-- Trending Strip -->
+<?php if (!empty($hero_products)): ?>
+<section class="trending-strip">
+    <div class="container trending-inner">
+        <span class="trending-label"><?php esc_html_e('Trending', 'affos'); ?></span>
+        <div class="trending-list">
+            <?php
+            $rank = 1;
+            foreach ($hero_products as $tp) {
+                printf(
+                    '<a href="%s" class="trending-item"><span class="rank">%d</span><span class="name">%s</span></a>',
+                    esc_url(get_permalink($tp->ID)),
+                    $rank,
+                    esc_html(wp_trim_words($tp->post_title, 4, ''))
+                );
+                $rank++;
+            }
+            ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
 <!-- Latest Products Section -->
-<section class="products-section" id="smartphones">
+<section class="section" id="smartphones">
     <div class="container">
         <div class="section-header">
-            <h2>
-                <?php esc_html_e('Produk Terbaru', 'affos'); ?>
-            </h2>
-            <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>" class="btn btn-outline-dark btn-sm">
+            <h2 class="section-title"><?php esc_html_e('Produk Terbaru', 'affos'); ?></h2>
+            <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>" class="see-all">
                 <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line"></i>
             </a>
         </div>
@@ -222,9 +158,7 @@ $review_count = wp_count_posts('review')->publish;
             } else {
                 ?>
                 <div class="no-products">
-                    <p>
-                        <?php esc_html_e('Belum ada produk. Tambahkan produk dari dashboard.', 'affos'); ?>
-                    </p>
+                    <p><?php esc_html_e('Belum ada produk. Tambahkan produk dari dashboard.', 'affos'); ?></p>
                 </div>
                 <?php
             }
@@ -234,38 +168,39 @@ $review_count = wp_count_posts('review')->publish;
 </section>
 
 <!-- Latest Reviews Section -->
-<section class="reviews-section">
+<section class="section">
     <div class="container">
         <div class="section-header">
-            <h2>
-                <?php esc_html_e('Ulasan Terbaru', 'affos'); ?>
-            </h2>
-            <a href="<?php echo esc_url(get_post_type_archive_link('review')); ?>" class="btn btn-outline-dark btn-sm">
+            <h2 class="section-title"><?php esc_html_e('Ulasan Terbaru', 'affos'); ?></h2>
+            <a href="<?php echo esc_url(get_post_type_archive_link('review')); ?>" class="see-all">
                 <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line"></i>
             </a>
         </div>
 
-        <div class="reviews-grid">
+        <div class="review-grid">
             <?php
             $reviews = get_posts(array(
                 'post_type' => 'review',
-                'posts_per_page' => 4,
+                'posts_per_page' => 3,
                 'orderby' => 'date',
                 'order' => 'DESC',
             ));
 
             if (!empty($reviews)) {
+                $first = true;
                 foreach ($reviews as $review) {
                     setup_postdata($review);
-                    get_template_part('template-parts/card', 'review', array('review' => $review));
+                    get_template_part('template-parts/card', 'review', array(
+                        'review' => $review,
+                        'featured' => $first,
+                    ));
+                    $first = false;
                 }
                 wp_reset_postdata();
             } else {
                 ?>
                 <div class="no-reviews">
-                    <p>
-                        <?php esc_html_e('Belum ada ulasan. Tambahkan ulasan dari dashboard.', 'affos'); ?>
-                    </p>
+                    <p><?php esc_html_e('Belum ada ulasan. Tambahkan ulasan dari dashboard.', 'affos'); ?></p>
                 </div>
                 <?php
             }
@@ -275,17 +210,15 @@ $review_count = wp_count_posts('review')->publish;
 </section>
 
 <!-- Latest Blog Posts Section -->
-<section class="blog-section">
+<section class="section">
     <div class="container">
         <div class="section-header">
-            <h2>
-                <?php esc_html_e('Berita & Artikel', 'affos'); ?>
-            </h2>
+            <h2 class="section-title"><?php esc_html_e('Dari Blog', 'affos'); ?></h2>
             <?php
             $blog_page = get_option('page_for_posts');
             $blog_url = $blog_page ? get_permalink($blog_page) : home_url('/blog/');
             ?>
-            <a href="<?php echo esc_url($blog_url); ?>" class="btn btn-outline-dark btn-sm">
+            <a href="<?php echo esc_url($blog_url); ?>" class="see-all">
                 <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line"></i>
             </a>
         </div>
@@ -294,7 +227,7 @@ $review_count = wp_count_posts('review')->publish;
             <?php
             $posts = get_posts(array(
                 'post_type' => 'post',
-                'posts_per_page' => 4,
+                'posts_per_page' => 3,
                 'orderby' => 'date',
                 'order' => 'DESC',
             ));
@@ -308,13 +241,25 @@ $review_count = wp_count_posts('review')->publish;
             } else {
                 ?>
                 <div class="no-posts">
-                    <p>
-                        <?php esc_html_e('Belum ada artikel. Buat artikel dari dashboard.', 'affos'); ?>
-                    </p>
+                    <p><?php esc_html_e('Belum ada artikel. Buat artikel dari dashboard.', 'affos'); ?></p>
                 </div>
                 <?php
             }
             ?>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="section">
+    <div class="container">
+        <div class="newsletter">
+            <h2><?php esc_html_e('Dapatkan Update Terbaru', 'affos'); ?></h2>
+            <p><?php esc_html_e('Langganan newsletter kami untuk mendapatkan ulasan, perbandingan, dan tips gadget terbaru langsung di inbox Anda.', 'affos'); ?></p>
+            <form class="newsletter-form" action="#" method="post">
+                <input type="email" placeholder="<?php esc_attr_e('Alamat email Anda', 'affos'); ?>" required>
+                <button type="submit" class="btn-primary"><?php esc_html_e('Langganan', 'affos'); ?></button>
+            </form>
         </div>
     </div>
 </section>

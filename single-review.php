@@ -35,16 +35,30 @@ while (have_posts()):
     // Get category
     $categories = get_the_terms($review_id, 'review_category');
     $category_name = ($categories && !is_wp_error($categories)) ? $categories[0]->name : '';
+    $category_slug = ($categories && !is_wp_error($categories)) ? $categories[0]->slug : '';
 
     // Get author info
     $author_id = get_the_author_meta('ID');
     $author_name = get_the_author_meta('display_name');
-    $author_bio = get_the_author_meta('description');
 
     // Reading time
     $content = get_the_content();
     $word_count = str_word_count(strip_tags($content));
     $reading_time = max(1, ceil($word_count / 200));
+
+    // Score level class
+    $score_num = (float) $score;
+    $score_class = '';
+    if ($score_num >= 9.0) $score_class = 'excellent';
+    elseif ($score_num >= 7.0) $score_class = 'good';
+    elseif ($score_num >= 5.0) $score_class = 'average';
+    else $score_class = 'poor';
+
+    // Category icon
+    $cat_icon = 'ri-smartphone-line';
+    if ($category_slug === 'laptop') $cat_icon = 'ri-macbook-line';
+    elseif ($category_slug === 'tablet') $cat_icon = 'ri-tablet-line';
+    elseif ($category_slug === 'audio') $cat_icon = 'ri-headphone-line';
 
     // Get product info if linked
     $product_price = '';
@@ -63,76 +77,49 @@ while (have_posts()):
     }
     ?>
 
+    <!-- Breadcrumb -->
+    <div class="container">
+        <nav class="breadcrumb" aria-label="<?php esc_attr_e('Breadcrumb', 'affos'); ?>">
+            <a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Beranda', 'affos'); ?></a>
+            <span class="sep">/</span>
+            <a href="<?php echo esc_url(get_post_type_archive_link('review')); ?>"><?php esc_html_e('Ulasan', 'affos'); ?></a>
+            <span class="sep">/</span>
+            <span class="current-crumb"><?php the_title(); ?></span>
+        </nav>
+    </div>
+
     <!-- Review Header -->
     <section class="review-header">
         <div class="container">
-            <nav class="review-breadcrumb" aria-label="<?php esc_attr_e('Breadcrumb', 'affos'); ?>">
-                <a href="<?php echo esc_url(home_url('/')); ?>">
-                    <?php esc_html_e('Beranda', 'affos'); ?>
-                </a>
-                <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
-                <a href="<?php echo esc_url(get_post_type_archive_link('review')); ?>">
-                    <?php esc_html_e('Ulasan', 'affos'); ?>
-                </a>
-                <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
-                <span aria-current="page">
-                    <?php the_title(); ?>
-                </span>
-            </nav>
-
-            <div class="review-header-content">
-                <div class="review-header-text">
-                    <div class="review-header-meta">
-                        <?php if ($category_name): ?>
-                            <span class="review-cat-badge">
-                                <?php echo esc_html($category_name); ?>
-                            </span>
-                        <?php endif; ?>
-                        <span class="review-date-badge"><i class="ri-calendar-line"></i>
-                            <?php echo get_the_date(); ?>
-                        </span>
-                        <span class="review-read-time"><i class="ri-time-line"></i>
-                            <?php printf(__('%d min read', 'affos'), $reading_time); ?>
-                        </span>
-                    </div>
-                    <h1>
-                        <?php the_title(); ?>
-                    </h1>
-                    <?php if (has_excerpt()): ?>
-                        <p class="review-header-excerpt">
-                            <?php echo esc_html(get_the_excerpt()); ?>
-                        </p>
+            <div class="review-header-inner">
+                <div class="review-header-content">
+                    <?php if ($category_name): ?>
+                        <p class="category-label"><?php echo esc_html($category_name); ?></p>
                     <?php endif; ?>
-                    <div class="review-header-author">
-                        <div class="author-avatar-lg">
+                    <div class="post-meta">
+                        <span><?php echo get_the_date('j M Y'); ?></span>
+                        <span>&middot;</span>
+                        <span><?php printf(__('%d menit baca', 'affos'), $reading_time); ?></span>
+                    </div>
+                    <h1><?php the_title(); ?></h1>
+                    <?php if (has_excerpt()): ?>
+                        <p class="excerpt"><?php echo esc_html(get_the_excerpt()); ?></p>
+                    <?php endif; ?>
+                    <div class="review-author">
+                        <div class="avatar">
                             <?php echo get_avatar($author_id, 48); ?>
                         </div>
-                        <div class="author-details">
-                            <span class="author-name">
-                                <?php echo esc_html($author_name); ?>
-                            </span>
-                            <span class="author-role">
-                                <?php esc_html_e('Senior Reviewer • Tech Enthusiast', 'affos'); ?>
-                            </span>
+                        <div class="author-info">
+                            <div class="name"><?php echo esc_html($author_name); ?></div>
+                            <div class="role"><?php esc_html_e('Senior Reviewer', 'affos'); ?></div>
                         </div>
                     </div>
                 </div>
+
                 <?php if ($score): ?>
-                    <div class="review-header-score">
-                        <div class="score-circle">
-                            <span class="score-value">
-                                <?php echo esc_html(number_format((float) $score, 1)); ?>
-                            </span>
-                            <span class="score-label">
-                                <?php echo esc_html($verdict ?: 'Good'); ?>
-                            </span>
-                        </div>
-                        <?php if ($verdict === 'Excellent'): ?>
-                            <div class="score-badge">
-                                <i class="ri-award-fill"></i>
-                                <?php esc_html_e("Editor's Choice", 'affos'); ?>
-                            </div>
-                        <?php endif; ?>
+                    <div class="score-circle <?php echo esc_attr($score_class); ?>">
+                        <span class="score-num"><?php echo esc_html(number_format($score_num, 1)); ?></span>
+                        <span class="score-verdict"><?php echo esc_html($verdict ?: 'Good'); ?></span>
                     </div>
                 <?php endif; ?>
             </div>
@@ -140,195 +127,168 @@ while (have_posts()):
     </section>
 
     <!-- Review Hero Image -->
-    <section class="review-hero-image">
-        <div class="container">
-            <div class="hero-image-wrapper">
-                <?php if (has_post_thumbnail()): ?>
-                    <?php the_post_thumbnail('full', array('class' => 'hero-image')); ?>
-                <?php else: ?>
-                    <div class="hero-image-placeholder">
-                        <i class="ri-smartphone-line"></i>
-                        <span>
-                            <?php the_title(); ?>
-                        </span>
+    <div class="container">
+        <div class="review-hero-img cat-<?php echo esc_attr($category_slug ?: 'smartphone'); ?>">
+            <?php if (has_post_thumbnail()): ?>
+                <?php the_post_thumbnail('full', array('class' => 'hero-image')); ?>
+            <?php else: ?>
+                <i class="<?php echo esc_attr($cat_icon); ?>" aria-hidden="true"></i>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Review Layout -->
+    <div class="container">
+        <div class="review-layout">
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+
+                <?php if ($product_price || !empty($buy_links)): ?>
+                    <!-- Buy Card -->
+                    <div class="sidebar-card">
+                        <h4><?php esc_html_e('Beli Produk', 'affos'); ?></h4>
+                        <?php if ($product_price): ?>
+                            <div class="price-section">
+                                <div class="price-label"><?php esc_html_e('Harga Mulai', 'affos'); ?></div>
+                                <div class="price-value"><?php echo esc_html($product_price); ?></div>
+                            </div>
+                        <?php endif; ?>
+                        <?php if (!empty($buy_links) && is_array($buy_links)): ?>
+                            <div class="buy-link-list">
+                                <?php foreach ($buy_links as $link):
+                                    if (empty($link['store_url']))
+                                        continue;
+                                    $store_info = affos_get_store_info($link['store_name']);
+                                    ?>
+                                    <a href="<?php echo esc_url($link['store_url']); ?>" class="buy-link" target="_blank"
+                                        rel="noopener">
+                                        <span><?php echo esc_html($store_info['name']); ?></span>
+                                        <span class="bl-price"><?php echo esc_html($link['store_price']); ?></span>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
-            </div>
-        </div>
-    </section>
 
-    <!-- Review Content -->
-    <section class="review-content-section">
-        <div class="container">
-            <div class="review-layout">
-                <!-- Sidebar -->
-                <aside class="review-sidebar">
-                    <?php if ($product_price || !empty($buy_links)): ?>
-                        <div class="sidebar-card buy-card">
-                            <h4>
-                                <?php esc_html_e('Beli Sekarang', 'affos'); ?>
-                            </h4>
-                            <?php if ($product_price): ?>
-                                <p class="buy-price">
-                                    <?php echo esc_html($product_price); ?>
-                                </p>
+                <?php if (!empty(array_filter($product_specs))): ?>
+                    <!-- Key Specs Card -->
+                    <div class="sidebar-card">
+                        <h4><?php esc_html_e('Spesifikasi Utama', 'affos'); ?></h4>
+                        <div class="key-spec-list">
+                            <?php foreach ($product_specs as $label => $value):
+                                if (!$value)
+                                    continue;
+                                ?>
+                                <div class="key-spec">
+                                    <span class="k-label"><?php echo esc_html($label); ?></span>
+                                    <span class="k-value"><?php echo esc_html(wp_trim_words($value, 3, '')); ?></span>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php if ($product_id): ?>
+                            <a href="<?php echo esc_url(get_permalink($product_id)); ?>" class="sidebar-detail-link">
+                                <?php esc_html_e('Lihat Detail Lengkap', 'affos'); ?> &rarr;
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty(array_filter(array_column($ratings, 'value')))): ?>
+                    <!-- Ratings Card -->
+                    <div class="sidebar-card">
+                        <h4><?php esc_html_e('Rating Detail', 'affos'); ?></h4>
+                        <?php foreach ($ratings as $key => $rating):
+                            if (!$rating['value'])
+                                continue;
+                            $percentage = ($rating['value'] / 10) * 100;
+                            $rating_val = (float) $rating['value'];
+                            $fill_class = $rating_val >= 9.0 ? 'excellent' : ($rating_val >= 7.0 ? 'good' : 'average');
+                            ?>
+                            <div class="rating-row">
+                                <span class="rating-label"><?php echo esc_html($rating['label']); ?></span>
+                                <div class="rating-bar">
+                                    <div class="rating-fill <?php echo esc_attr($fill_class); ?>" style="width: <?php echo esc_attr($percentage); ?>%"></div>
+                                </div>
+                                <span class="rating-num"><?php echo esc_html(number_format($rating_val, 1)); ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($pros || $cons): ?>
+                    <!-- Verdict Card -->
+                    <div class="sidebar-card">
+                        <h4><?php esc_html_e('Verdict', 'affos'); ?></h4>
+                        <div class="pros-cons">
+                            <?php if ($pros):
+                                $pros_list = array_filter(explode("\n", $pros));
+                                ?>
+                                <div class="pros">
+                                    <h5><?php esc_html_e('Kelebihan', 'affos'); ?></h5>
+                                    <ul>
+                                        <?php foreach ($pros_list as $pro): ?>
+                                            <li><?php echo esc_html(trim($pro)); ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
                             <?php endif; ?>
-                            <?php if (!empty($buy_links) && is_array($buy_links)): ?>
-                                <div class="buy-links">
-                                    <?php foreach ($buy_links as $link):
-                                        if (empty($link['store_url']))
-                                            continue;
-                                        $store_info = affos_get_store_info($link['store_name']);
-                                        ?>
-                                        <a href="<?php echo esc_url($link['store_url']); ?>" class="buy-link" target="_blank"
-                                            rel="noopener">
-                                            <?php if (!empty($store_info['logo_url'])): ?>
-                                                <img src="<?php echo esc_url($store_info['logo_url']); ?>"
-                                                    alt="<?php echo esc_attr($store_info['name']); ?>" class="buy-link-logo">
-                                            <?php else: ?>
-                                                <i class="<?php echo esc_attr($store_info['icon']); ?>"></i>
-                                            <?php endif; ?>
-                                            <?php echo esc_html($store_info['name']); ?>
-                                            <i class="ri-external-link-line"></i>
-                                        </a>
-                                    <?php endforeach; ?>
+                            <?php if ($cons):
+                                $cons_list = array_filter(explode("\n", $cons));
+                                ?>
+                                <div class="cons">
+                                    <h5><?php esc_html_e('Kekurangan', 'affos'); ?></h5>
+                                    <ul>
+                                        <?php foreach ($cons_list as $con): ?>
+                                            <li><?php echo esc_html(trim($con)); ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
                                 </div>
                             <?php endif; ?>
                         </div>
-                    <?php endif; ?>
-
-                    <?php if (!empty(array_filter($product_specs))): ?>
-                        <div class="sidebar-card specs-card">
-                            <h4>
-                                <?php esc_html_e('Spesifikasi Utama', 'affos'); ?>
-                            </h4>
-                            <ul class="specs-list">
-                                <?php foreach ($product_specs as $label => $value):
-                                    if (!$value)
-                                        continue;
-                                    ?>
-                                    <li><span>
-                                            <?php echo esc_html($label); ?>
-                                        </span><strong>
-                                            <?php echo esc_html(wp_trim_words($value, 3, '')); ?>
-                                        </strong></li>
-                                <?php endforeach; ?>
-                            </ul>
-                            <?php if ($product_id): ?>
-                                <a href="<?php echo esc_url(get_permalink($product_id)); ?>" class="btn btn-outline btn-sm">
-                                    <?php esc_html_e('Lihat Detail Lengkap', 'affos'); ?>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            <?php endif; ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if (!empty(array_filter(array_column($ratings, 'value')))): ?>
-                        <div class="sidebar-card rating-card">
-                            <h4>
-                                <?php esc_html_e('Rating Detail', 'affos'); ?>
-                            </h4>
-                            <div class="rating-bars">
-                                <?php foreach ($ratings as $key => $rating):
-                                    if (!$rating['value'])
-                                        continue;
-                                    $percentage = ($rating['value'] / 10) * 100;
-                                    ?>
-                                    <div class="rating-item">
-                                        <span class="rating-label">
-                                            <?php echo esc_html($rating['label']); ?>
-                                        </span>
-                                        <div class="rating-bar" role="progressbar" aria-valuenow="<?php echo esc_attr($rating['value']); ?>" aria-valuemin="0" aria-valuemax="10" aria-label="<?php echo esc_attr($rating['label']); ?>">
-                                            <div class="rating-fill" style="width: <?php echo esc_attr($percentage); ?>%"></div>
-                                        </div>
-                                        <span class="rating-score">
-                                            <?php echo esc_html(number_format((float) $rating['value'], 1)); ?>
-                                        </span>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if ($pros || $cons): ?>
-                        <div class="sidebar-card verdict-card">
-                            <h4>
-                                <?php esc_html_e('Verdict', 'affos'); ?>
-                            </h4>
-                            <div class="pros-cons">
-                                <?php if ($pros):
-                                    $pros_list = array_filter(explode("\n", $pros));
-                                    ?>
-                                    <div class="pros">
-                                        <h5><i class="ri-thumb-up-fill"></i>
-                                            <?php esc_html_e('Kelebihan', 'affos'); ?>
-                                        </h5>
-                                        <ul>
-                                            <?php foreach ($pros_list as $pro): ?>
-                                                <li>
-                                                    <?php echo esc_html(trim($pro)); ?>
-                                                </li>
-                                            <?php endforeach; ?>
-                                        </ul>
-                                    </div>
-                                <?php endif; ?>
-                                <?php if ($cons):
-                                    $cons_list = array_filter(explode("\n", $cons));
-                                    ?>
-                                    <div class="cons">
-                                        <h5><i class="ri-thumb-down-fill"></i>
-                                            <?php esc_html_e('Kekurangan', 'affos'); ?>
-                                        </h5>
-                                        <ul>
-                                            <?php foreach ($cons_list as $con): ?>
-                                                <li>
-                                                    <?php echo esc_html(trim($con)); ?>
-                                                </li>
-                                            <?php endforeach; ?>
-                                        </ul>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                </aside>
-
-                <!-- Main Article -->
-                <article class="review-article">
-                    <div class="article-content">
-                        <?php the_content(); ?>
                     </div>
+                <?php endif; ?>
 
-                    <!-- Share -->
-                    <div class="article-share">
-                        <span>
-                            <?php esc_html_e('Bagikan:', 'affos'); ?>
-                        </span>
-                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(get_permalink()); ?>&text=<?php echo urlencode(get_the_title()); ?>"
-                            target="_blank" rel="noopener" class="share-btn" aria-label="<?php esc_attr_e('Bagikan di Twitter', 'affos'); ?>">
-                            <i class="ri-twitter-x-line" aria-hidden="true"></i>
-                        </a>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(get_permalink()); ?>"
-                            target="_blank" rel="noopener" class="share-btn" aria-label="<?php esc_attr_e('Bagikan di Facebook', 'affos'); ?>">
-                            <i class="ri-facebook-fill" aria-hidden="true"></i>
-                        </a>
-                        <a href="https://wa.me/?text=<?php echo urlencode(get_the_title() . ' ' . get_permalink()); ?>"
-                            target="_blank" rel="noopener" class="share-btn" aria-label="<?php esc_attr_e('Bagikan via WhatsApp', 'affos'); ?>">
-                            <i class="ri-whatsapp-line" aria-hidden="true"></i>
-                        </a>
-                    </div>
-                </article>
-            </div>
+            </aside>
+
+            <!-- Article Content -->
+            <article class="article-content">
+                <?php the_content(); ?>
+
+                <!-- Share Row -->
+                <div class="share-row">
+                    <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(get_permalink()); ?>&text=<?php echo urlencode(get_the_title()); ?>"
+                        target="_blank" rel="noopener" class="share-btn">
+                        <i class="ri-twitter-x-line" aria-hidden="true"></i>
+                        Twitter
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(get_permalink()); ?>"
+                        target="_blank" rel="noopener" class="share-btn">
+                        <i class="ri-facebook-line" aria-hidden="true"></i>
+                        Facebook
+                    </a>
+                    <a href="https://wa.me/?text=<?php echo urlencode(get_the_title() . ' ' . get_permalink()); ?>"
+                        target="_blank" rel="noopener" class="share-btn">
+                        <i class="ri-whatsapp-line" aria-hidden="true"></i>
+                        WhatsApp
+                    </a>
+                </div>
+            </article>
+
         </div>
-    </section>
+    </div>
 
     <!-- Related Reviews -->
-    <section class="related-reviews">
+    <section class="section">
         <div class="container">
-            <h2 class="section-title">
-                <?php esc_html_e('Ulasan Terkait', 'affos'); ?>
-            </h2>
-            <div class="reviews-grid">
+            <div class="section-header">
+                <h2 class="section-title"><?php esc_html_e('Ulasan Terkait', 'affos'); ?></h2>
+                <a href="<?php echo esc_url(get_post_type_archive_link('review')); ?>" class="see-all">
+                    <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
+            <div class="review-grid">
                 <?php
                 $related = get_posts(array(
                     'post_type' => 'review',

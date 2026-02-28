@@ -10,21 +10,11 @@ get_header();
 
 while (have_posts()) : the_post();
     $post_id = get_the_ID();
-    
+
     // Get category
     $categories = get_the_category();
     $category_name = !empty($categories) ? $categories[0]->name : '';
     $category_slug = !empty($categories) ? $categories[0]->slug : '';
-
-    // Badge class
-    $badge_class = '';
-    if (strpos($category_slug, 'tips') !== false) {
-        $badge_class = 'tips';
-    } elseif ($category_slug === 'tutorial') {
-        $badge_class = 'tutorial';
-    } elseif (strpos($category_slug, 'opini') !== false) {
-        $badge_class = 'opinion';
-    }
 
     // Get author info
     $author_id = get_the_author_meta('ID');
@@ -37,146 +27,160 @@ while (have_posts()) : the_post();
     $reading_time = max(1, ceil($word_count / 200));
 ?>
 
-<!-- Post Header -->
-<section class="post-header">
-    <div class="container">
-        <div class="post-breadcrumb">
-            <a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Beranda', 'affos'); ?></a>
-            <i class="ri-arrow-right-s-line"></i>
-            <?php
-            $blog_page = get_option('page_for_posts');
-            $blog_url = $blog_page ? get_permalink($blog_page) : home_url('/blog/');
-            ?>
-            <a href="<?php echo esc_url($blog_url); ?>"><?php esc_html_e('Blog', 'affos'); ?></a>
-            <i class="ri-arrow-right-s-line"></i>
-            <span><?php the_title(); ?></span>
-        </div>
+<!-- Breadcrumb -->
+<div class="container">
+    <nav class="breadcrumb" aria-label="<?php esc_attr_e('Breadcrumb', 'affos'); ?>">
+        <a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Beranda', 'affos'); ?></a>
+        <span class="sep"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span>
+        <?php
+        $blog_page = get_option('page_for_posts');
+        $blog_url = $blog_page ? get_permalink($blog_page) : home_url('/blog/');
+        ?>
+        <a href="<?php echo esc_url($blog_url); ?>"><?php esc_html_e('Blog', 'affos'); ?></a>
+        <span class="sep"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span>
+        <span class="current-crumb"><?php echo esc_html(wp_trim_words(get_the_title(), 5)); ?></span>
+    </nav>
+</div>
 
-        <div class="post-header-content">
-            <?php if ($category_name) : ?>
-                <span class="post-cat-badge <?php echo esc_attr($badge_class); ?>"><?php echo esc_html($category_name); ?></span>
-            <?php endif; ?>
-            <h1><?php the_title(); ?></h1>
-            <?php if (has_excerpt()) : ?>
-                <p class="post-header-excerpt"><?php echo esc_html(get_the_excerpt()); ?></p>
-            <?php endif; ?>
-            <div class="post-header-meta">
-                <div class="post-author-info">
-                    <div class="author-avatar-lg">
-                        <?php echo get_avatar($author_id, 48); ?>
-                    </div>
-                    <div class="author-details">
-                        <span class="author-name"><?php echo esc_html($author_name); ?></span>
-                        <span class="author-role"><?php esc_html_e('Affos Editorial', 'affos'); ?></span>
-                    </div>
-                </div>
-                <div class="post-meta-info">
-                    <span class="post-date"><i class="ri-calendar-line"></i> <?php echo get_the_date(); ?></span>
-                    <span class="post-read-time"><i class="ri-time-line"></i> <?php printf(__('%d min read', 'affos'), $reading_time); ?></span>
-                </div>
+<!-- Post Header -->
+<div class="container">
+    <div class="post-header">
+        <?php if ($category_name) : ?>
+            <span class="category-label"><?php echo esc_html($category_name); ?></span>
+        <?php endif; ?>
+        <h1><?php the_title(); ?></h1>
+        <?php if (has_excerpt()) : ?>
+            <p class="excerpt"><?php echo esc_html(get_the_excerpt()); ?></p>
+        <?php endif; ?>
+        <div class="post-author-row">
+            <div class="author-avatar">
+                <?php echo get_avatar($author_id, 40); ?>
             </div>
+            <span class="author-name"><?php echo esc_html($author_name); ?></span>
+            <span>&middot;</span>
+            <span><?php echo get_the_date('j M Y'); ?></span>
+            <span>&middot;</span>
+            <span><?php printf(__('%d menit baca', 'affos'), $reading_time); ?></span>
         </div>
     </div>
-</section>
+</div>
 
 <!-- Post Hero Image -->
-<?php if (has_post_thumbnail()) : ?>
-<section class="post-hero-image">
-    <div class="container">
-        <div class="hero-image-wrapper">
+<div class="container">
+    <div class="post-hero-img">
+        <?php if (has_post_thumbnail()) : ?>
             <?php the_post_thumbnail('full', array('class' => 'hero-image')); ?>
-        </div>
+        <?php else: ?>
+            <i class="ri-article-line" aria-hidden="true"></i>
+        <?php endif; ?>
     </div>
-</section>
-<?php endif; ?>
+</div>
 
-<!-- Post Content -->
-<section class="post-content-section">
-    <div class="container">
-        <div class="post-layout">
-            <!-- Sidebar -->
-            <aside class="post-sidebar">
-                <!-- Table of Contents -->
-                <div class="sidebar-card toc-card">
-                    <h4><i class="ri-list-unordered"></i> <?php esc_html_e('Daftar Isi', 'affos'); ?></h4>
-                    <nav class="toc-nav" id="toc-nav">
-                        <!-- Generated by JavaScript -->
-                    </nav>
-                </div>
+<!-- Post Layout -->
+<div class="container">
+    <div class="post-layout">
 
-                <!-- Share -->
-                <div class="sidebar-card share-card">
-                    <h4><?php esc_html_e('Bagikan Artikel', 'affos'); ?></h4>
-                    <div class="share-buttons">
-                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(get_permalink()); ?>&text=<?php echo urlencode(get_the_title()); ?>" target="_blank" rel="noopener" class="share-btn twitter">
-                            <i class="ri-twitter-x-line"></i>
-                        </a>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(get_permalink()); ?>" target="_blank" rel="noopener" class="share-btn facebook">
-                            <i class="ri-facebook-fill"></i>
-                        </a>
-                        <a href="https://wa.me/?text=<?php echo urlencode(get_the_title() . ' ' . get_permalink()); ?>" target="_blank" rel="noopener" class="share-btn whatsapp">
-                            <i class="ri-whatsapp-line"></i>
-                        </a>
-                        <button class="share-btn copy" onclick="navigator.clipboard.writeText('<?php echo esc_js(get_permalink()); ?>')">
-                            <i class="ri-link"></i>
-                        </button>
-                    </div>
-                </div>
+        <!-- Article Content -->
+        <article class="article-content">
+            <?php the_content(); ?>
 
-                <!-- Newsletter -->
-                <div class="sidebar-card newsletter-card">
-                    <h4><i class="ri-mail-line"></i> <?php esc_html_e('Newsletter', 'affos'); ?></h4>
-                    <p><?php esc_html_e('Dapatkan update terbaru langsung ke inbox Anda.', 'affos'); ?></p>
-                    <form class="newsletter-form" action="#" method="post">
-                        <input type="email" placeholder="<?php esc_attr_e('Email Anda', 'affos'); ?>" required>
-                        <button type="submit" class="btn btn-primary btn-sm"><?php esc_html_e('Langganan', 'affos'); ?></button>
-                    </form>
-                </div>
-            </aside>
+            <!-- Tags -->
+            <?php
+            $tags = get_the_tags();
+            if ($tags) :
+            ?>
+            <div class="tag-list">
+                <?php foreach ($tags as $tag) : ?>
+                    <a href="<?php echo esc_url(get_tag_link($tag->term_id)); ?>" class="tag-item"><?php echo esc_html($tag->name); ?></a>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
 
-            <!-- Main Article -->
-            <article class="post-article">
-                <div class="article-content">
-                    <?php the_content(); ?>
+            <!-- Author Box -->
+            <div class="author-box">
+                <div class="avatar-lg">
+                    <?php echo get_avatar($author_id, 64); ?>
                 </div>
+                <div>
+                    <h4><?php esc_html_e('Tentang Penulis', 'affos'); ?></h4>
+                    <div class="author-name"><?php echo esc_html($author_name); ?></div>
+                    <?php if ($author_bio) : ?>
+                        <p><?php echo esc_html($author_bio); ?></p>
+                    <?php else : ?>
+                        <p><?php esc_html_e('Kontributor di Affos dengan fokus pada review gadget dan teknologi terkini.', 'affos'); ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
 
-                <!-- Tags -->
-                <?php
-                $tags = get_the_tags();
-                if ($tags) :
-                ?>
-                <div class="article-tags">
-                    <span class="tags-label"><?php esc_html_e('Tags:', 'affos'); ?></span>
-                    <?php foreach ($tags as $tag) : ?>
-                        <a href="<?php echo esc_url(get_tag_link($tag->term_id)); ?>" class="tag"><?php echo esc_html($tag->name); ?></a>
-                    <?php endforeach; ?>
-                </div>
-                <?php endif; ?>
+            <!-- Share Row -->
+            <div class="share-row">
+                <button class="share-btn" onclick="window.open('https://twitter.com/intent/tweet?url=<?php echo urlencode(get_permalink()); ?>&text=<?php echo urlencode(get_the_title()); ?>', '_blank')">
+                    <i class="ri-twitter-x-line" aria-hidden="true"></i> Twitter
+                </button>
+                <button class="share-btn" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(get_permalink()); ?>', '_blank')">
+                    <i class="ri-facebook-line" aria-hidden="true"></i> Facebook
+                </button>
+                <button class="share-btn" onclick="window.open('https://wa.me/?text=<?php echo urlencode(get_the_title() . ' ' . get_permalink()); ?>', '_blank')">
+                    <i class="ri-whatsapp-line" aria-hidden="true"></i> WhatsApp
+                </button>
+                <button class="share-btn" onclick="navigator.clipboard.writeText('<?php echo esc_js(get_permalink()); ?>')">
+                    <i class="ri-link" aria-hidden="true"></i> Copy Link
+                </button>
+            </div>
+        </article>
 
-                <!-- Author Box -->
-                <div class="author-box">
-                    <div class="author-avatar-xl">
-                        <?php echo get_avatar($author_id, 80); ?>
-                    </div>
-                    <div class="author-content">
-                        <h4><?php esc_html_e('Tentang Penulis', 'affos'); ?></h4>
-                        <h5><?php echo esc_html($author_name); ?></h5>
-                        <?php if ($author_bio) : ?>
-                            <p><?php echo esc_html($author_bio); ?></p>
-                        <?php else : ?>
-                            <p><?php esc_html_e('Kontributor di Affos dengan fokus pada review gadget dan teknologi terkini.', 'affos'); ?></p>
-                        <?php endif; ?>
-                    </div>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- TOC Card -->
+            <div class="sidebar-card">
+                <h4><?php esc_html_e('Daftar Isi', 'affos'); ?></h4>
+                <nav class="toc-list" id="toc-nav">
+                    <!-- Generated by JavaScript -->
+                </nav>
+            </div>
+
+            <!-- Share Card -->
+            <div class="sidebar-card">
+                <h4><?php esc_html_e('Bagikan', 'affos'); ?></h4>
+                <div class="sidebar-share-list">
+                    <button class="share-btn" onclick="window.open('https://twitter.com/intent/tweet?url=<?php echo urlencode(get_permalink()); ?>&text=<?php echo urlencode(get_the_title()); ?>', '_blank')">
+                        <i class="ri-twitter-x-line" aria-hidden="true"></i> Twitter
+                    </button>
+                    <button class="share-btn" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(get_permalink()); ?>', '_blank')">
+                        <i class="ri-facebook-line" aria-hidden="true"></i> Facebook
+                    </button>
+                    <button class="share-btn" onclick="window.open('https://wa.me/?text=<?php echo urlencode(get_the_title() . ' ' . get_permalink()); ?>', '_blank')">
+                        <i class="ri-whatsapp-line" aria-hidden="true"></i> WhatsApp
+                    </button>
+                    <button class="share-btn" onclick="navigator.clipboard.writeText('<?php echo esc_js(get_permalink()); ?>')">
+                        <i class="ri-link" aria-hidden="true"></i> Copy Link
+                    </button>
                 </div>
-            </article>
-        </div>
+            </div>
+
+            <!-- Newsletter Card -->
+            <div class="sidebar-card">
+                <h4><?php esc_html_e('Newsletter', 'affos'); ?></h4>
+                <p class="sidebar-desc"><?php esc_html_e('Dapatkan tips gadget langsung di inbox Anda.', 'affos'); ?></p>
+                <form action="#" method="post">
+                    <input type="email" placeholder="<?php esc_attr_e('Email Anda', 'affos'); ?>" class="sidebar-input" required>
+                    <button type="submit" class="btn-primary sidebar-btn-full"><?php esc_html_e('Langganan', 'affos'); ?></button>
+                </form>
+            </div>
+        </aside>
+
     </div>
-</section>
+</div>
 
 <!-- Related Posts -->
-<section class="related-posts">
+<section class="section">
     <div class="container">
-        <h2 class="section-title"><?php esc_html_e('Artikel Terkait', 'affos'); ?></h2>
+        <div class="section-header">
+            <h2 class="section-title"><?php esc_html_e('Artikel Terkait', 'affos'); ?></h2>
+            <a href="<?php echo esc_url($blog_url); ?>" class="see-all">
+                <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-s-line"></i>
+            </a>
+        </div>
         <div class="blog-grid">
             <?php
             $related = get_posts(array(

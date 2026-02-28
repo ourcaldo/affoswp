@@ -109,6 +109,7 @@ while (have_posts()):
     $brands = get_the_terms($product_id, 'product_brand');
     $brand_name = ($brands && !is_wp_error($brands)) ? $brands[0]->name : '';
     $category_name = ($categories && !is_wp_error($categories)) ? $categories[0]->name : '';
+    $category_slug = ($categories && !is_wp_error($categories)) ? $categories[0]->slug : '';
 
     // Extract camera MP
     $camera_display = '';
@@ -123,192 +124,154 @@ while (have_posts()):
         preg_match('/(\d+)\s*mAh/i', $battery, $matches);
         $battery_display = isset($matches[0]) ? $matches[0] : '';
     }
+
+    // Map category to icon
+    $cat_icon = 'ri-smartphone-line';
+    if ($category_slug === 'laptop') $cat_icon = 'ri-laptop-line';
+    elseif ($category_slug === 'tablet') $cat_icon = 'ri-tablet-line';
     ?>
 
-    <main class="product-page" id="main-content">
+    <main id="main-content">
+        <!-- Breadcrumb -->
         <div class="container">
-            <!-- Breadcrumb -->
             <nav class="breadcrumb" aria-label="<?php esc_attr_e('Breadcrumb', 'affos'); ?>">
-                <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>">
-                    <?php esc_html_e('Produk', 'affos'); ?>
-                </a>
-                <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
+                <a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Beranda', 'affos'); ?></a>
+                <span class="sep">&rsaquo;</span>
+                <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>"><?php esc_html_e('Produk', 'affos'); ?></a>
                 <?php if ($category_name): ?>
-                    <a href="<?php echo esc_url(get_term_link($categories[0])); ?>">
-                        <?php echo esc_html($category_name); ?>
-                    </a>
-                    <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
+                    <span class="sep">&rsaquo;</span>
+                    <a href="<?php echo esc_url(get_term_link($categories[0])); ?>"><?php echo esc_html($category_name); ?></a>
                 <?php endif; ?>
-                <span aria-current="page">
-                    <?php the_title(); ?>
-                </span>
+                <span class="sep">&rsaquo;</span>
+                <span class="current-crumb"><?php the_title(); ?></span>
             </nav>
+        </div>
 
-            <!-- Product Header -->
+        <!-- Product Hero -->
+        <div class="container">
             <div class="product-hero">
-                <div class="product-gallery">
-                    <div class="gallery-main">
-                        <?php if (has_post_thumbnail()): ?>
-                            <?php the_post_thumbnail('large', array('class' => 'gallery-main-img')); ?>
-                        <?php else: ?>
-                            <div class="gallery-main-placeholder">
-                                <i class="ri-smartphone-line" aria-hidden="true"></i>
-                            </div>
-                        <?php endif; ?>
-                    </div>
+                <div class="product-gallery cat-<?php echo esc_attr($category_slug ?: 'smartphone'); ?>">
+                    <?php if (has_post_thumbnail()): ?>
+                        <?php the_post_thumbnail('large', array('class' => 'gallery-main-img')); ?>
+                    <?php else: ?>
+                        <i class="<?php echo esc_attr($cat_icon); ?>" aria-hidden="true"></i>
+                    <?php endif; ?>
                 </div>
 
                 <div class="product-info">
-                    <div class="product-badges">
+                    <div class="badge-row">
                         <?php if (strpos(strtolower($status), 'available') !== false): ?>
-                            <span class="badge badge-new">
-                                <?php esc_html_e('Terbaru', 'affos'); ?>
-                            </span>
+                            <span class="badge"><?php esc_html_e('Terbaru', 'affos'); ?></span>
                         <?php endif; ?>
                         <?php if ($brand_name): ?>
-                            <span class="badge badge-brand">
-                                <?php echo esc_html($brand_name); ?>
-                            </span>
+                            <span class="badge"><?php echo esc_html($brand_name); ?></span>
                         <?php endif; ?>
                     </div>
-                    <h1 class="product-title">
-                        <?php the_title(); ?>
-                    </h1>
+                    <h1><?php the_title(); ?></h1>
                     <?php if (has_excerpt()): ?>
-                        <p class="product-tagline">
-                            <?php echo esc_html(get_the_excerpt()); ?>
-                        </p>
+                        <p class="tagline"><?php echo esc_html(get_the_excerpt()); ?></p>
                     <?php endif; ?>
 
-                    <div class="product-quick-specs">
+                    <div class="quick-specs">
                         <?php if ($chipset): ?>
-                            <div class="quick-spec">
-                                <i class="ri-cpu-line"></i>
-                                <div>
-                                    <span class="spec-label">
-                                        <?php esc_html_e('Chipset', 'affos'); ?>
-                                    </span>
-                                    <span class="spec-value">
-                                        <?php echo esc_html($chipset); ?>
-                                    </span>
+                            <div class="quick-spec-item">
+                                <i class="ri-cpu-line" aria-hidden="true"></i>
+                                <div class="spec-detail">
+                                    <span class="spec-label"><?php esc_html_e('Chipset', 'affos'); ?></span>
+                                    <span class="spec-value"><?php echo esc_html($chipset); ?></span>
                                 </div>
                             </div>
                         <?php endif; ?>
                         <?php if ($camera_display): ?>
-                            <div class="quick-spec">
-                                <i class="ri-camera-lens-line"></i>
-                                <div>
-                                    <span class="spec-label">
-                                        <?php esc_html_e('Kamera', 'affos'); ?>
-                                    </span>
-                                    <span class="spec-value">
-                                        <?php echo esc_html($camera_display); ?>
-                                    </span>
+                            <div class="quick-spec-item">
+                                <i class="ri-camera-line" aria-hidden="true"></i>
+                                <div class="spec-detail">
+                                    <span class="spec-label"><?php esc_html_e('Camera', 'affos'); ?></span>
+                                    <span class="spec-value"><?php echo esc_html($camera_display); ?></span>
                                 </div>
                             </div>
                         <?php endif; ?>
                         <?php if ($battery_display): ?>
-                            <div class="quick-spec">
-                                <i class="ri-battery-charge-line"></i>
-                                <div>
-                                    <span class="spec-label">
-                                        <?php esc_html_e('Baterai', 'affos'); ?>
-                                    </span>
-                                    <span class="spec-value">
-                                        <?php echo esc_html($battery_display); ?>
-                                    </span>
+                            <div class="quick-spec-item">
+                                <i class="ri-battery-2-charge-line" aria-hidden="true"></i>
+                                <div class="spec-detail">
+                                    <span class="spec-label"><?php esc_html_e('Battery', 'affos'); ?></span>
+                                    <span class="spec-value"><?php echo esc_html($battery_display); ?></span>
                                 </div>
                             </div>
                         <?php endif; ?>
                         <?php if ($display): ?>
-                            <div class="quick-spec">
-                                <i class="ri-artboard-line"></i>
-                                <div>
-                                    <span class="spec-label">
-                                        <?php esc_html_e('Layar', 'affos'); ?>
-                                    </span>
-                                    <span class="spec-value">
-                                        <?php echo esc_html($display); ?>
-                                    </span>
+                            <div class="quick-spec-item">
+                                <i class="ri-smartphone-line" aria-hidden="true"></i>
+                                <div class="spec-detail">
+                                    <span class="spec-label"><?php esc_html_e('Display', 'affos'); ?></span>
+                                    <span class="spec-value"><?php echo esc_html($display); ?></span>
                                 </div>
                             </div>
                         <?php endif; ?>
                     </div>
 
-                    <div class="product-price-section">
-                        <div class="price-label">
-                            <?php esc_html_e('Harga Mulai', 'affos'); ?>
-                        </div>
-                        <div class="price-value">
-                            <?php echo esc_html($price ?: __('Hubungi Toko', 'affos')); ?>
-                        </div>
-                        <div class="price-note">
-                            <?php esc_html_e('*Harga dapat berbeda di setiap toko', 'affos'); ?>
-                        </div>
+                    <div class="price-section">
+                        <p class="price-label"><?php esc_html_e('Harga Mulai', 'affos'); ?></p>
+                        <p class="price-value"><?php echo esc_html($price ?: __('Hubungi Toko', 'affos')); ?></p>
                     </div>
 
                     <div class="product-actions">
-                        <button class="btn btn-primary add-to-compare"
+                        <button class="btn-primary add-to-compare"
                             data-compare-id="<?php echo esc_attr($product_id); ?>">
-                            <i class="ri-scales-3-line"></i>
+                            <i class="ri-repeat-line" aria-hidden="true"></i>
                             <?php esc_html_e('Bandingkan', 'affos'); ?>
                         </button>
-                        <button class="btn btn-outline"><i class="ri-heart-line"></i>
-                            <?php esc_html_e('Simpan', 'affos'); ?>
+                        <button class="btn-secondary" aria-label="<?php esc_attr_e('Simpan', 'affos'); ?>">
+                            <i class="ri-heart-line" aria-hidden="true"></i>
                         </button>
-                        <button class="btn btn-outline"><i class="ri-share-line"></i>
-                            <?php esc_html_e('Bagikan', 'affos'); ?>
+                        <button class="btn-ghost" aria-label="<?php esc_attr_e('Bagikan', 'affos'); ?>">
+                            <i class="ri-share-line" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Where to Buy -->
-            <?php if (!empty($buy_links) && is_array($buy_links)): ?>
-                <section class="where-to-buy">
-                    <h2 class="section-title"><i class="ri-store-2-line"></i>
-                        <?php esc_html_e('Tempat Beli', 'affos'); ?>
-                    </h2>
-                    <div class="store-list">
+        <!-- Buy Section -->
+        <?php if (!empty($buy_links) && is_array($buy_links)): ?>
+            <section class="buy-section">
+                <div class="container">
+                    <h2 class="section-title"><?php esc_html_e('Tempat Beli', 'affos'); ?></h2>
+                    <div class="buy-grid">
                         <?php foreach ($buy_links as $link):
                             if (empty($link['store_url']))
                                 continue;
                             $store_info = affos_get_store_info($link['store_name']);
                             ?>
-                            <a href="<?php echo esc_url($link['store_url']); ?>" class="store-card" target="_blank"
+                            <a href="<?php echo esc_url($link['store_url']); ?>" class="buy-card" target="_blank"
                                 rel="noopener noreferrer">
-                                <div class="store-logo">
+                                <div class="store-icon">
                                     <?php if (!empty($store_info['logo_url'])): ?>
                                         <img src="<?php echo esc_url($store_info['logo_url']); ?>"
                                             alt="<?php echo esc_attr($store_info['name']); ?>">
                                     <?php else: ?>
-                                        <i class="<?php echo esc_attr($store_info['icon']); ?>"></i>
+                                        <i class="<?php echo esc_attr($store_info['icon']); ?>" aria-hidden="true"></i>
                                     <?php endif; ?>
                                 </div>
                                 <div class="store-info">
-                                    <span class="store-name">
-                                        <?php echo esc_html($store_info['name']); ?>
-                                    </span>
-                                    <span class="store-price">
-                                        <?php echo esc_html($link['store_price']); ?>
-                                    </span>
+                                    <div class="store-name"><?php echo esc_html($store_info['name']); ?></div>
+                                    <div class="store-price"><?php echo esc_html($link['store_price']); ?></div>
                                 </div>
-                                <i class="ri-external-link-line store-link-icon"></i>
+                                <i class="ri-arrow-right-s-line buy-arrow" aria-hidden="true"></i>
                             </a>
                         <?php endforeach; ?>
                     </div>
-                </section>
-            <?php endif; ?>
+                </div>
+            </section>
+        <?php endif; ?>
 
-            <!-- Full Specifications -->
-            <section class="full-specs">
-                <h2 class="section-title"><i class="ri-file-list-3-line"></i>
-                    <?php esc_html_e('Spesifikasi Lengkap', 'affos'); ?>
-                </h2>
-
-                <div class="specs-container">
+        <!-- Spec Section -->
+        <section class="spec-section">
+            <div class="container">
+                <h2 class="section-title"><?php esc_html_e('Spesifikasi Lengkap', 'affos'); ?></h2>
+                <div class="spec-table">
                     <?php foreach ($specs as $section_id => $section):
-                        // Check if any field has value
                         $has_values = false;
                         foreach ($section['fields'] as $field_id => $field_label) {
                             if (get_post_meta($product_id, $field_id, true)) {
@@ -319,55 +282,52 @@ while (have_posts()):
                         if (!$has_values)
                             continue;
                         ?>
-                        <div class="spec-table">
-                            <div class="spec-table-header">
-                                <i class="<?php echo esc_attr($section['icon']); ?>"></i>
-                                <h3>
-                                    <?php echo esc_html($section['title']); ?>
-                                </h3>
+                        <div class="spec-group">
+                            <div class="spec-group-header">
+                                <i class="<?php echo esc_attr($section['icon']); ?>" aria-hidden="true"></i>
+                                <?php echo esc_html($section['title']); ?>
                             </div>
-                            <div class="spec-table-body">
-                                <?php foreach ($section['fields'] as $field_id => $field_label):
-                                    $value = get_post_meta($product_id, $field_id, true);
-                                    if (!$value)
-                                        continue;
-                                    ?>
-                                    <div class="spec-row">
-                                        <span class="spec-key">
-                                            <?php echo esc_html($field_label); ?>
-                                        </span>
-                                        <span class="spec-val">
-                                            <?php echo esc_html($value); ?>
-                                        </span>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
+                            <?php foreach ($section['fields'] as $field_id => $field_label):
+                                $value = get_post_meta($product_id, $field_id, true);
+                                if (!$value)
+                                    continue;
+                                ?>
+                                <div class="spec-row">
+                                    <span class="spec-label"><?php echo esc_html($field_label); ?></span>
+                                    <span class="spec-val"><?php echo esc_html($value); ?></span>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Related Reviews -->
-            <?php
-            $related_reviews = get_posts(array(
-                'post_type' => 'review',
-                'posts_per_page' => 3,
-                'meta_query' => array(
-                    array(
-                        'key' => '_review_product_id',
-                        'value' => $product_id,
-                        'compare' => '=',
-                    ),
+        <!-- Related Reviews -->
+        <?php
+        $related_reviews = get_posts(array(
+            'post_type' => 'review',
+            'posts_per_page' => 3,
+            'meta_query' => array(
+                array(
+                    'key' => '_review_product_id',
+                    'value' => $product_id,
+                    'compare' => '=',
                 ),
-            ));
+            ),
+        ));
 
-            if (!empty($related_reviews)):
-                ?>
-                <section class="related-reviews">
-                    <h2 class="section-title">
-                        <?php esc_html_e('Ulasan Terkait', 'affos'); ?>
-                    </h2>
-                    <div class="product-grid">
+        if (!empty($related_reviews)):
+            ?>
+            <section class="section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title"><?php esc_html_e('Ulasan Terkait', 'affos'); ?></h2>
+                        <a href="<?php echo esc_url(get_post_type_archive_link('review')); ?>" class="see-all">
+                            <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line"></i>
+                        </a>
+                    </div>
+                    <div class="review-grid">
                         <?php
                         foreach ($related_reviews as $review) {
                             get_template_part('template-parts/card', 'review', array('review' => $review));
@@ -375,14 +335,19 @@ while (have_posts()):
                         wp_reset_postdata();
                         ?>
                     </div>
-                </section>
-            <?php endif; ?>
+                </div>
+            </section>
+        <?php endif; ?>
 
-            <!-- Related Products -->
-            <section class="related-products">
-                <h2 class="section-title">
-                    <?php esc_html_e('Produk Terkait', 'affos'); ?>
-                </h2>
+        <!-- Related Products -->
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title"><?php esc_html_e('Produk Terkait', 'affos'); ?></h2>
+                    <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>" class="see-all">
+                        <?php esc_html_e('Lihat Semua', 'affos'); ?> <i class="ri-arrow-right-line"></i>
+                    </a>
+                </div>
                 <div class="product-grid">
                     <?php
                     $related = get_posts(array(
@@ -404,8 +369,8 @@ while (have_posts()):
                     wp_reset_postdata();
                     ?>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
     </main>
 
     <?php

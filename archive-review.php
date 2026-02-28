@@ -13,154 +13,62 @@ $categories = get_terms(array(
     'taxonomy' => 'review_category',
     'hide_empty' => false,
 ));
+
+$review_count = wp_count_posts('review')->publish;
 ?>
 
 <main id="main-content">
 
-<!-- Hero Section - Reviews (Teal Theme) -->
-<section class="reviews-hero">
+<!-- Page Header -->
+<section class="page-header">
     <div class="container">
-        <div class="reviews-hero-content">
-            <div class="reviews-hero-text">
-                <span class="reviews-badge">
-                    <i class="ri-star-line"></i>
-                    <?php esc_html_e('Ulasan Mendalam', 'affos'); ?>
-                </span>
-                <h1>
-                    <?php esc_html_e('Review Gadget', 'affos'); ?><br><span>
-                        <?php esc_html_e('Jujur & Lengkap', 'affos'); ?>
-                    </span>
-                </h1>
-                <p>
-                    <?php esc_html_e('Tim ahli kami menguji setiap gadget secara menyeluruh untuk memberikan ulasan yang objektif, detail, dan membantu Anda membuat keputusan pembelian.', 'affos'); ?>
-                </p>
-                <div class="reviews-hero-stats">
-                    <div class="stat-box">
-                        <span class="stat-num">
-                            <?php echo esc_html(wp_count_posts('review')->publish); ?>+
-                        </span>
-                        <span class="stat-label">
-                            <?php esc_html_e('Review', 'affos'); ?>
-                        </span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-num">5</span>
-                        <span class="stat-label">
-                            <?php esc_html_e('Reviewer', 'affos'); ?>
-                        </span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-num">4.8</span>
-                        <span class="stat-label">
-                            <?php esc_html_e('Rating', 'affos'); ?>
-                        </span>
-                    </div>
-                </div>
+        <div class="page-header-row">
+            <div>
+                <h1><?php esc_html_e('Ulasan', 'affos'); ?></h1>
+                <p><?php esc_html_e('Review mendalam dan jujur dari tim editorial kami untuk membantu Anda memilih gadget terbaik.', 'affos'); ?></p>
             </div>
-            <div class="reviews-hero-visual">
-                <div class="review-cards-stack">
-                    <?php
-                    // Get top 3 reviews for visual
-                    $top_reviews = get_posts(array(
-                        'post_type' => 'review',
-                        'posts_per_page' => 3,
-                        'orderby' => 'meta_value_num',
-                        'meta_key' => '_review_score',
-                        'order' => 'DESC',
-                    ));
-
-                    $card_class = 1;
-                    foreach ($top_reviews as $review) {
-                        $score = get_post_meta($review->ID, '_review_score', true);
-                        ?>
-                        <div class="review-card-mini card-<?php echo $card_class; ?>">
-                            <div class="mini-rating">
-                                <i class="ri-star-fill"></i>
-                                <span>
-                                    <?php echo esc_html(number_format((float) $score, 1)); ?>
-                                </span>
-                            </div>
-                            <div class="mini-title">
-                                <?php echo esc_html(wp_trim_words($review->post_title, 3, '')); ?>
-                            </div>
-                        </div>
-                        <?php
-                        $card_class++;
-                    }
-
-                    // Fallback if no reviews
-                    if (empty($top_reviews)) {
-                        ?>
-                        <div class="review-card-mini card-1">
-                            <div class="mini-rating"><i class="ri-star-fill"></i><span>9.2</span></div>
-                            <div class="mini-title">iPhone 15 Pro</div>
-                        </div>
-                        <div class="review-card-mini card-2">
-                            <div class="mini-rating"><i class="ri-star-fill"></i><span>9.0</span></div>
-                            <div class="mini-title">Galaxy S24</div>
-                        </div>
-                        <div class="review-card-mini card-3">
-                            <div class="mini-rating"><i class="ri-star-fill"></i><span>8.8</span></div>
-                            <div class="mini-title">Pixel 8 Pro</div>
-                        </div>
-                        <?php
-                    }
-                    ?>
-                </div>
-                <!-- Decorative elements -->
-                <div class="review-ring ring-1"></div>
-                <div class="review-ring ring-2"></div>
-            </div>
+            <span class="result-count">
+                <?php printf(esc_html__('%s ulasan', 'affos'), esc_html($review_count)); ?>
+            </span>
         </div>
     </div>
 </section>
 
-<!-- Category Filter -->
-<section class="reviews-filter">
-    <div class="container">
-        <div class="filter-bar reviews-filter-bar">
-            <button class="filter-btn active" data-filter="all">
-                <i class="ri-apps-line"></i>
-                <?php esc_html_e('Semua', 'affos'); ?>
+<!-- Filter Bar -->
+<div class="container">
+    <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">
+            <?php esc_html_e('Semua', 'affos'); ?>
+        </button>
+        <?php if (!empty($categories) && !is_wp_error($categories)): ?>
+            <?php foreach ($categories as $category): ?>
+                <button class="filter-btn" data-filter="<?php echo esc_attr($category->slug); ?>">
+                    <?php echo esc_html($category->name); ?>
+                </button>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <button class="filter-btn" data-filter="smartphone">
+                <?php esc_html_e('Smartphone', 'affos'); ?>
             </button>
-            <?php if (!empty($categories) && !is_wp_error($categories)): ?>
-                <?php foreach ($categories as $category):
-                    $icon = 'ri-smartphone-line';
-                    if ($category->slug === 'laptop') {
-                        $icon = 'ri-macbook-line';
-                    } elseif ($category->slug === 'tablet') {
-                        $icon = 'ri-tablet-line';
-                    } elseif ($category->slug === 'audio') {
-                        $icon = 'ri-headphone-line';
-                    }
-                    ?>
-                    <button class="filter-btn" data-filter="<?php echo esc_attr($category->slug); ?>">
-                        <i class="<?php echo esc_attr($icon); ?>"></i>
-                        <?php echo esc_html($category->name); ?>
-                    </button>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <button class="filter-btn" data-filter="smartphone">
-                    <i class="ri-smartphone-line"></i>
-                    <?php esc_html_e('Smartphone', 'affos'); ?>
-                </button>
-                <button class="filter-btn" data-filter="laptop">
-                    <i class="ri-macbook-line"></i>
-                    <?php esc_html_e('Laptop', 'affos'); ?>
-                </button>
-                <button class="filter-btn" data-filter="tablet">
-                    <i class="ri-tablet-line"></i>
-                    <?php esc_html_e('Tablet', 'affos'); ?>
-                </button>
-            <?php endif; ?>
+            <button class="filter-btn" data-filter="laptop">
+                <?php esc_html_e('Laptop', 'affos'); ?>
+            </button>
+            <button class="filter-btn" data-filter="tablet">
+                <?php esc_html_e('Tablet', 'affos'); ?>
+            </button>
+        <?php endif; ?>
+
+        <div class="filter-search">
+            <i class="ri-search-line" aria-hidden="true"></i>
+            <input type="text" placeholder="<?php esc_attr_e('Cari ulasan...', 'affos'); ?>">
         </div>
     </div>
-</section>
+</div>
 
 <!-- Reviews Grid -->
-<section class="reviews-archive">
+<section class="section">
     <div class="container">
-        <div class="reviews-grid">
+        <div class="review-grid">
             <?php
             $first = true;
             if (have_posts()):
@@ -175,9 +83,7 @@ $categories = get_terms(array(
             else:
                 ?>
                 <div class="no-reviews">
-                    <p>
-                        <?php esc_html_e('Belum ada ulasan.', 'affos'); ?>
-                    </p>
+                    <p><?php esc_html_e('Belum ada ulasan.', 'affos'); ?></p>
                 </div>
                 <?php
             endif;
@@ -187,8 +93,8 @@ $categories = get_terms(array(
         <?php
         the_posts_pagination(array(
             'mid_size' => 2,
-            'prev_text' => '<i class="ri-arrow-left-line"></i> ' . __('Sebelumnya', 'affos'),
-            'next_text' => __('Selanjutnya', 'affos') . ' <i class="ri-arrow-right-line"></i>',
+            'prev_text' => '<i class="ri-arrow-left-s-line"></i>',
+            'next_text' => '<i class="ri-arrow-right-s-line"></i>',
         ));
         ?>
     </div>

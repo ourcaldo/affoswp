@@ -33,27 +33,24 @@ if ($compare_products_slug) {
 $product_count = count($url_products);
 $show_add_slot = $product_count < 3;
 $total_cols = $product_count + ($show_add_slot ? 1 : 0);
+$grid_class = $total_cols >= 3 ? ' three-products' : '';
 ?>
 
 <main class="compare-page<?php echo $has_url_products ? ' has-products' : ''; ?>">
     <div class="container">
         <?php if (!$has_url_products): ?>
             <!-- Empty State: Hero Section -->
-            <div class="compare-header">
-                <span class="compare-badge">
-                    <i class="ri-scales-3-line"></i>
-                    <?php esc_html_e('Perbandingan', 'affos'); ?>
-                </span>
+            <section class="compare-header">
+                <span class="badge"><?php esc_html_e('Perbandingan', 'affos'); ?></span>
                 <h1><?php esc_html_e('Bandingkan Gadget', 'affos'); ?></h1>
-                <p><?php esc_html_e('Pilih hingga 3 gadget untuk membandingkan spesifikasi secara langsung.', 'affos'); ?>
-                </p>
-            </div>
+                <p><?php esc_html_e('Pilih hingga 3 gadget untuk membandingkan spesifikasi secara langsung.', 'affos'); ?></p>
+            </section>
 
             <!-- Empty State Message -->
             <div class="compare-empty-state">
                 <i class="ri-scales-3-line"></i>
                 <p><?php esc_html_e('Belum ada produk yang dipilih untuk dibandingkan.', 'affos'); ?></p>
-                <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>" class="btn btn-primary">
+                <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>" class="btn-primary">
                     <i class="ri-smartphone-line"></i>
                     <?php esc_html_e('Pilih Gadget', 'affos'); ?>
                 </a>
@@ -63,46 +60,58 @@ $total_cols = $product_count + ($show_add_slot ? 1 : 0);
             <!-- Compare Results: Has Products -->
 
             <!-- Page Title -->
-            <div class="compare-title-section">
+            <section class="compare-header">
+                <span class="badge"><?php esc_html_e('Perbandingan', 'affos'); ?></span>
                 <h1><?php esc_html_e('Bandingkan Gadget', 'affos'); ?></h1>
                 <p><?php esc_html_e('Bandingkan spesifikasi dan harga dari produk yang Anda pilih', 'affos'); ?></p>
-            </div>
+            </section>
 
             <!-- Actions Bar -->
-            <div class="compare-actions-bar">
-                <div class="compare-actions-left">
-                    <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>" class="action-link">
-                        <i class="ri-add-circle-line"></i>
-                        <?php esc_html_e('Tambah Produk', 'affos'); ?>
-                    </a>
-                    <a href="<?php echo esc_url(home_url('/bandingkan/')); ?>" class="action-link danger"
-                        id="clear-compare-all">
-                        <i class="ri-close-circle-line"></i>
-                        <?php esc_html_e('Hapus Semua', 'affos'); ?>
-                    </a>
+            <div class="compare-actions">
+                <div class="container">
+                    <button class="btn-secondary" id="add-compare-product" onclick="window.location.href='<?php echo esc_url(get_post_type_archive_link('product')); ?>'">
+                        <i class="ri-add-line"></i> <?php esc_html_e('Tambah Produk', 'affos'); ?>
+                    </button>
+                    <button class="btn-ghost" id="clear-compare-all">
+                        <i class="ri-delete-bin-line"></i> <?php esc_html_e('Hapus Semua', 'affos'); ?>
+                    </button>
+                    <label class="toggle-label">
+                        <input type="checkbox" id="show-diff-only">
+                        <?php esc_html_e('Tampilkan perbedaan saja', 'affos'); ?>
+                    </label>
                 </div>
-                <label class="toggle-label">
-                    <input type="checkbox" id="show-diff-only">
-                    <?php esc_html_e('Tampilkan perbedaan saja', 'affos'); ?>
-                </label>
             </div>
 
             <!-- Compare Table -->
-            <div class="compare-table-container">
+            <section class="compare-table">
+                <div class="container">
                 <!-- Product Cards Header -->
-                <div class="compare-products-header"
-                    style="grid-template-columns: 200px repeat(<?php echo $total_cols; ?>, 1fr);">
-                    <div class="compare-label-cell">
-                        <!-- Empty corner -->
-                    </div>
+                <div class="compare-products-header<?php echo $product_count >= 3 ? ' three-products' : ''; ?>">
+                    <div class="label-col">VS</div>
 
                     <?php foreach ($url_products as $index => $pid):
                         $product = get_post($pid);
                         $thumbnail = get_the_post_thumbnail_url($pid, 'medium');
                         $price = get_post_meta($pid, '_misc_price', true);
-                        $status = get_post_meta($pid, '_launch_status', true);
-                        $is_available = strpos(strtolower($status), 'available') !== false;
-                        $review_count = get_comments_number($pid);
+                        $p_categories = get_the_terms($pid, 'product_category');
+                        $category_slug = ($p_categories && !is_wp_error($p_categories)) ? $p_categories[0]->slug : '';
+
+                        // Get review score
+                        $product_review = get_posts(array(
+                            'post_type' => 'review',
+                            'posts_per_page' => 1,
+                            'meta_query' => array(
+                                array(
+                                    'key' => '_review_product_id',
+                                    'value' => $pid,
+                                    'compare' => '=',
+                                ),
+                            ),
+                        ));
+                        $review_score = 0;
+                        if (!empty($product_review)) {
+                            $review_score = (float) get_post_meta($product_review[0]->ID, '_review_score', true);
+                        }
                         ?>
                         <div class="compare-product-card" data-product-id="<?php echo esc_attr($pid); ?>">
                             <?php if ($index === 0): ?>
@@ -111,7 +120,7 @@ $total_cols = $product_count + ($show_add_slot ? 1 : 0);
                             <button class="remove-product-btn" data-remove-id="<?php echo esc_attr($pid); ?>" aria-label="<?php esc_attr_e('Hapus produk', 'affos'); ?>">
                                 <i class="ri-close-line" aria-hidden="true"></i>
                             </button>
-                            <div class="product-image">
+                            <div class="cp-img cat-<?php echo esc_attr($category_slug ?: 'smartphone'); ?>">
                                 <?php if ($thumbnail): ?>
                                     <img src="<?php echo esc_url($thumbnail); ?>"
                                         alt="<?php echo esc_attr($product->post_title); ?>">
@@ -119,52 +128,13 @@ $total_cols = $product_count + ($show_add_slot ? 1 : 0);
                                     <i class="ri-smartphone-line" aria-hidden="true"></i>
                                 <?php endif; ?>
                             </div>
-                            <h3 class="product-name"><?php echo esc_html($product->post_title); ?></h3>
-                            <div class="product-rating" aria-hidden="true">
-                                <?php
-                                // Get actual review score for this product
-                                $product_review = get_posts(array(
-                                    'post_type' => 'review',
-                                    'posts_per_page' => 1,
-                                    'meta_query' => array(
-                                        array(
-                                            'key' => '_review_product_id',
-                                            'value' => $pid,
-                                            'compare' => '=',
-                                        ),
-                                    ),
-                                ));
-                                $review_score = 0;
-                                if (!empty($product_review)) {
-                                    $review_score = (float) get_post_meta($product_review[0]->ID, '_review_score', true);
-                                }
-                                if ($review_score > 0):
-                                    $full_stars = floor($review_score / 2);
-                                    $half_star = ($review_score / 2) - $full_stars >= 0.25;
-                                    $empty_stars = 5 - $full_stars - ($half_star ? 1 : 0);
-                                    for ($s = 0; $s < $full_stars; $s++): ?>
-                                        <i class="ri-star-fill"></i>
-                                    <?php endfor;
-                                    if ($half_star): ?>
-                                        <i class="ri-star-half-fill"></i>
-                                    <?php endif;
-                                    for ($s = 0; $s < $empty_stars; $s++): ?>
-                                        <i class="ri-star-line"></i>
-                                    <?php endfor; ?>
-                                    <span><?php echo esc_html(number_format($review_score, 1)); ?></span>
-                                <?php else: ?>
-                                    <span><?php esc_html_e('Belum ada review', 'affos'); ?></span>
-                                <?php endif; ?>
-                            </div>
-                            <div class="product-availability">
-                                <?php if ($is_available): ?>
-                                    <i class="ri-checkbox-circle-fill"></i>
-                                    <?php esc_html_e('Tersedia', 'affos'); ?>
-                                <?php else: ?>
-                                    <i class="ri-time-line"></i>
-                                    <?php esc_html_e('Coming Soon', 'affos'); ?>
-                                <?php endif; ?>
-                            </div>
+                            <h3><?php echo esc_html($product->post_title); ?></h3>
+                            <div class="cp-price"><?php echo esc_html($price ?: '-'); ?></div>
+                            <?php if ($review_score > 0):
+                                $score_label = $review_score >= 9.0 ? 'Excellent' : ($review_score >= 7.0 ? 'Good' : ($review_score >= 5.0 ? 'Average' : 'Poor'));
+                            ?>
+                                <div class="cp-score">&#9733; <?php echo esc_html(number_format($review_score, 1)); ?> <?php echo esc_html($score_label); ?></div>
+                            <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
 
@@ -198,15 +168,15 @@ $total_cols = $product_count + ($show_add_slot ? 1 : 0);
 
                 <?php if ($has_any_buy_links): ?>
                     <!-- Section: Beli Online -->
-                    <div class="compare-spec-section">
-                        <h3><?php esc_html_e('Beli Online', 'affos'); ?></h3>
+                    <div class="compare-section-header">
+                        <div class="compare-section-title"><?php esc_html_e('Beli Online', 'affos'); ?></div>
                     </div>
-                    <div class="compare-spec-row" style="grid-template-columns: 200px repeat(<?php echo $total_cols; ?>, 1fr);">
-                        <div class="spec-label"><?php esc_html_e('Toko Online', 'affos'); ?></div>
+                    <div class="compare-row<?php echo $grid_class; ?>">
+                        <div class="compare-cell"><?php esc_html_e('Toko Online', 'affos'); ?></div>
                         <?php foreach ($url_products as $pid):
                             $buy_links = isset($all_buy_links[$pid]) ? $all_buy_links[$pid] : array();
                             ?>
-                            <div class="spec-value">
+                            <div class="compare-cell">
                                 <?php if (!empty($buy_links) && is_array($buy_links)): ?>
                                     <div class="store-logos-row">
                                         <?php foreach ($buy_links as $link):
@@ -232,17 +202,17 @@ $total_cols = $product_count + ($show_add_slot ? 1 : 0);
                             </div>
                         <?php endforeach; ?>
                         <?php if ($show_add_slot): ?>
-                            <div class="spec-value empty">-</div>
+                            <div class="compare-cell empty">-</div>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
 
                 <!-- Section: Harga -->
-                <div class="compare-spec-section">
-                    <h3><?php esc_html_e('Harga', 'affos'); ?></h3>
+                <div class="compare-section-header">
+                    <div class="compare-section-title"><?php esc_html_e('Harga', 'affos'); ?></div>
                 </div>
-                <div class="compare-spec-row" style="grid-template-columns: 200px repeat(<?php echo $total_cols; ?>, 1fr);">
-                    <div class="spec-label"><?php esc_html_e('Harga', 'affos'); ?></div>
+                <div class="compare-row<?php echo $grid_class; ?>">
+                    <div class="compare-cell"><?php esc_html_e('Harga', 'affos'); ?></div>
                     <?php
                     $prices = array();
                     foreach ($url_products as $pid) {
@@ -260,12 +230,12 @@ $total_cols = $product_count + ($show_add_slot ? 1 : 0);
                         $numeric = (int) preg_replace('/[^0-9]/', '', $price);
                         $is_lowest = ($numeric > 0 && $numeric === $min_price);
                         ?>
-                        <div class="spec-value<?php echo $is_lowest ? ' highlight' : ''; ?>">
+                        <div class="compare-cell<?php echo $is_lowest ? ' highlight' : ''; ?>">
                             <?php echo esc_html($price ?: '-'); ?>
                         </div>
                     <?php endforeach; ?>
                     <?php if ($show_add_slot): ?>
-                        <div class="spec-value empty">-</div>
+                        <div class="compare-cell empty">-</div>
                     <?php endif; ?>
                 </div>
 
@@ -397,27 +367,28 @@ $total_cols = $product_count + ($show_add_slot ? 1 : 0);
                     // Always show all sections for completeness
                     ?>
                     <!-- Section: <?php echo esc_html($section['title']); ?> -->
-                    <div class="compare-spec-section">
-                        <h3><?php echo esc_html($section['title']); ?></h3>
+                    <div class="compare-section-header">
+                        <div class="compare-section-title"><?php echo esc_html($section['title']); ?></div>
                     </div>
 
                     <?php foreach ($section['fields'] as $field_key => $field_label): ?>
-                        <div class="compare-spec-row" style="grid-template-columns: 200px repeat(<?php echo $total_cols; ?>, 1fr);">
-                            <div class="spec-label"><?php echo esc_html($field_label); ?></div>
+                        <div class="compare-row<?php echo $grid_class; ?>">
+                            <div class="compare-cell"><?php echo esc_html($field_label); ?></div>
                             <?php foreach ($url_products as $pid):
                                 $value = get_post_meta($pid, $field_key, true);
                                 ?>
-                                <div class="spec-value<?php echo empty($value) ? ' empty' : ''; ?>">
+                                <div class="compare-cell<?php echo empty($value) ? ' empty' : ''; ?>">
                                     <?php echo esc_html($value ?: '-'); ?>
                                 </div>
                             <?php endforeach; ?>
                             <?php if ($show_add_slot): ?>
-                                <div class="spec-value empty">-</div>
+                                <div class="compare-cell empty">-</div>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                 <?php endforeach; ?>
             </div>
+            </section>
 
         <?php endif; ?>
     </div>
