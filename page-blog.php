@@ -145,10 +145,18 @@ $categories = get_categories(array(
     <div class="container">
         <div class="blog-grid">
             <?php
+            $paged = get_query_var('paged') ? get_query_var('paged') : 1;
+            $blog_query = new WP_Query(array(
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'paged'          => $paged,
+                'posts_per_page' => get_option('posts_per_page'),
+            ));
+
             $first = true;
-            if (have_posts()):
-                while (have_posts()):
-                    the_post();
+            if ($blog_query->have_posts()):
+                while ($blog_query->have_posts()):
+                    $blog_query->the_post();
                     get_template_part('template-parts/card', 'blog', array(
                         'post' => get_post(),
                         'featured' => $first,
@@ -170,11 +178,17 @@ $categories = get_categories(array(
         <!-- Load More -->
         <div class="load-more">
             <?php
-            the_posts_pagination(array(
-                'mid_size' => 2,
+            $big = 999999999;
+            echo paginate_links(array(
+                'base'      => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
+                'format'    => '?paged=%#%',
+                'current'   => $paged,
+                'total'     => $blog_query->max_num_pages,
+                'mid_size'  => 2,
                 'prev_text' => '<i class="ri-arrow-left-line"></i>',
                 'next_text' => '<i class="ri-arrow-right-line"></i>',
             ));
+            wp_reset_postdata();
             ?>
         </div>
     </div>
