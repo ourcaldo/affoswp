@@ -1,6 +1,6 @@
 <?php
 /**
- * Blog Archive Template (home.php)
+ * Blog Archive Template (page-blog.php)
  *
  * @package Affos
  * @since 1.0.0

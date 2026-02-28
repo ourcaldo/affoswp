@@ -117,7 +117,7 @@ $compare_url = $compare_page_id ? get_permalink($compare_page_id) : home_url('/b
             <?php
         }
         ?>
-        <a href="<?php echo esc_url(get_permalink(get_option('page_for_posts'))); ?>">
+        <a href="<?php echo esc_url(home_url('/blog/')); ?>">
             <?php esc_html_e('Blog', 'affos'); ?>
         </a>
         <?php
