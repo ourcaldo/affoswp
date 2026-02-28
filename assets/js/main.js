@@ -114,7 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================
 
     const initComparisonSystem = () => {
-        let compareState = JSON.parse(localStorage.getItem('affos_compare')) || [];
+        let compareState = [];
+        try { compareState = JSON.parse(localStorage.getItem('affos_compare')) || []; } catch(e) {}
 
         const compareUrl = document.body.dataset.compareUrl || '/bandingkan/';
 
@@ -162,13 +163,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.classList.add('active');
                 }
 
-                localStorage.setItem('affos_compare', JSON.stringify(compareState));
+                try { localStorage.setItem('affos_compare', JSON.stringify(compareState)); } catch(e) {}
                 updateCompareBar();
             });
         });
 
         function updateCompareBar() {
-            const state = JSON.parse(localStorage.getItem('affos_compare') || '[]');
+            let state = [];
+            try { state = JSON.parse(localStorage.getItem('affos_compare') || '[]'); } catch(e) {}
 
             const isComparePage = window.location.pathname.includes('/bandingkan');
             if (isComparePage) {
@@ -215,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     .catch(() => { });
 
                 document.getElementById('clear-compare')?.addEventListener('click', () => {
-                    localStorage.setItem('affos_compare', '[]');
+                    try { localStorage.setItem('affos_compare', '[]'); } catch(e) {}
                     document.querySelectorAll('.add-to-compare, [data-compare-id]').forEach(b => {
                         b.classList.remove('active');
                     });

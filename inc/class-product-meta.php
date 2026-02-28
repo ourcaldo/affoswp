@@ -457,13 +457,18 @@ class Affos_Product_Meta
         // Verify nonce
         if (
             !isset($_POST['affos_product_meta_nonce']) ||
-            !wp_verify_nonce($_POST['affos_product_meta_nonce'], 'affos_product_meta')
+            !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['affos_product_meta_nonce'])), 'affos_product_meta')
         ) {
             return;
         }
 
         // Check autosave
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+
+        // Check post revision
+        if (wp_is_post_revision($post_id)) {
             return;
         }
 

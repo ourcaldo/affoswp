@@ -27,6 +27,8 @@ while (have_posts()) : the_post();
     $reading_time = max(1, ceil($word_count / 200));
 ?>
 
+<main id="main-content">
+
 <!-- Breadcrumb -->
 <div class="container">
     <nav class="breadcrumb" aria-label="<?php esc_attr_e('Breadcrumb', 'affos'); ?>">
@@ -48,7 +50,7 @@ while (have_posts()) : the_post();
         <?php if ($category_name) : ?>
             <span class="category-label"><?php echo esc_html($category_name); ?></span>
         <?php endif; ?>
-        <h1><?php the_title(); ?></h1>
+        <h1><?php echo esc_html(get_the_title()); ?></h1>
         <?php if (has_excerpt()) : ?>
             <p class="excerpt"><?php echo esc_html(get_the_excerpt()); ?></p>
         <?php endif; ?>
@@ -163,7 +165,7 @@ while (have_posts()) : the_post();
                 <h4><?php esc_html_e('Newsletter', 'affos'); ?></h4>
                 <p class="sidebar-desc"><?php esc_html_e('Dapatkan tips gadget langsung di inbox Anda.', 'affos'); ?></p>
                 <form action="#" method="post">
-                    <input type="email" placeholder="<?php esc_attr_e('Email Anda', 'affos'); ?>" class="sidebar-input" required>
+                    <input type="email" placeholder="<?php esc_attr_e('Email Anda', 'affos'); ?>" class="sidebar-input" required aria-label="<?php esc_attr_e('Alamat email', 'affos'); ?>">
                     <button type="submit" class="btn-primary sidebar-btn-full"><?php esc_html_e('Langganan', 'affos'); ?></button>
                 </form>
             </div>
@@ -198,6 +200,8 @@ while (have_posts()) : the_post();
         </div>
     </div>
 </section>
+
+</main>
 
 <?php
 endwhile;

@@ -16,8 +16,8 @@
                 <a href="<?php echo esc_url(home_url('/')); ?>" class="logo">
                     <?php echo esc_html(get_bloginfo('name')); ?><span>.</span>
                 </a>
-                <p><?php echo esc_html(get_bloginfo('description')); ?></p>
                 <?php if (!empty(get_bloginfo('description'))): ?>
+                    <p><?php echo esc_html(get_bloginfo('description')); ?></p>
                 <?php else: ?>
                     <p><?php esc_html_e('Platform referensi gadget #1 di Indonesia. Membantu Anda memilih gadget terbaik dengan data akurat dan ulasan jujur.', 'affos'); ?>
                     </p>

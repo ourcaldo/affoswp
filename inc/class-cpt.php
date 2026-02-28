@@ -203,6 +203,3 @@ class Affos_CPT
         ));
     }
 }
-
-// Initialize
-new Affos_CPT();

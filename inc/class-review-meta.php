@@ -18,20 +18,22 @@ class Affos_Review_Meta
     /**
      * Rating categories
      */
-    private $rating_categories = array(
-        '_review_rating_design' => 'Desain',
-        '_review_rating_display' => 'Layar',
-        '_review_rating_performance' => 'Performa',
-        '_review_rating_camera' => 'Kamera',
-        '_review_rating_battery' => 'Baterai',
-        '_review_rating_value' => 'Nilai',
-    );
+    private $rating_categories = array();
 
     /**
      * Constructor
      */
     public function __construct()
     {
+        $this->rating_categories = array(
+            '_review_rating_design' => __('Desain', 'affos'),
+            '_review_rating_display' => __('Layar', 'affos'),
+            '_review_rating_performance' => __('Performa', 'affos'),
+            '_review_rating_camera' => __('Kamera', 'affos'),
+            '_review_rating_battery' => __('Baterai', 'affos'),
+            '_review_rating_value' => __('Nilai', 'affos'),
+        );
+
         add_action('add_meta_boxes', array($this, 'add_meta_boxes'));
         add_action('save_post_review', array($this, 'save_meta'), 10, 2);
     }
@@ -240,13 +242,18 @@ class Affos_Review_Meta
         // Verify nonce
         if (
             !isset($_POST['affos_review_meta_nonce']) ||
-            !wp_verify_nonce($_POST['affos_review_meta_nonce'], 'affos_review_meta')
+            !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['affos_review_meta_nonce'])), 'affos_review_meta')
         ) {
             return;
         }
 
         // Check autosave
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+
+        // Check post revision
+        if (wp_is_post_revision($post_id)) {
             return;
         }
 

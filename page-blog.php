@@ -43,7 +43,7 @@ $post_count = wp_count_posts('post')->publish;
 
         <div class="filter-search">
             <i class="ri-search-line" aria-hidden="true"></i>
-            <input type="text" placeholder="<?php esc_attr_e('Cari artikel...', 'affos'); ?>">
+            <input type="text" placeholder="<?php esc_attr_e('Cari artikel...', 'affos'); ?>" aria-label="<?php esc_attr_e('Cari artikel', 'affos'); ?>">
         </div>
     </div>
 </div>
@@ -94,8 +94,8 @@ $first = true;
                 'current'   => $paged,
                 'total'     => $blog_query->max_num_pages,
                 'mid_size'  => 2,
-                'prev_text' => '<i class="ri-arrow-left-s-line"></i>',
-                'next_text' => '<i class="ri-arrow-right-s-line"></i>',
+                'prev_text' => '<span class="screen-reader-text">' . __('Sebelumnya', 'affos') . '</span><i class="ri-arrow-left-s-line" aria-hidden="true"></i>',
+                'next_text' => '<span class="screen-reader-text">' . __('Selanjutnya', 'affos') . '</span><i class="ri-arrow-right-s-line" aria-hidden="true"></i>',
             ));
             wp_reset_postdata();
             ?>

@@ -31,7 +31,7 @@ $spotlight = !empty($hero_products) ? $hero_products[0] : null;
             <p class="hero-desc"><?php esc_html_e('Bandingkan spesifikasi, baca ulasan mendalam, dan temukan harga terbaik untuk smartphone, laptop, dan gadget lainnya.', 'affos'); ?></p>
             <form class="hero-search" role="search" action="<?php echo esc_url(home_url('/')); ?>" method="get">
                 <i class="ri-search-line" aria-hidden="true"></i>
-                <input type="text" name="s" placeholder="<?php esc_attr_e('Cari produk, ulasan, atau artikel...', 'affos'); ?>">
+                <input type="text" name="s" placeholder="<?php esc_attr_e('Cari produk, ulasan, atau artikel...', 'affos'); ?>" aria-label="<?php esc_attr_e('Cari produk', 'affos'); ?>">
             </form>
         </div>
 
@@ -257,7 +257,7 @@ $spotlight = !empty($hero_products) ? $hero_products[0] : null;
             <h2><?php esc_html_e('Dapatkan Update Terbaru', 'affos'); ?></h2>
             <p><?php esc_html_e('Langganan newsletter kami untuk mendapatkan ulasan, perbandingan, dan tips gadget terbaru langsung di inbox Anda.', 'affos'); ?></p>
             <form class="newsletter-form" action="#" method="post">
-                <input type="email" placeholder="<?php esc_attr_e('Alamat email Anda', 'affos'); ?>" required>
+                <input type="email" placeholder="<?php esc_attr_e('Alamat email Anda', 'affos'); ?>" required aria-label="<?php esc_attr_e('Alamat email', 'affos'); ?>">
                 <button type="submit" class="btn-primary"><?php esc_html_e('Langganan', 'affos'); ?></button>
             </form>
         </div>

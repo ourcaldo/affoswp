@@ -35,6 +35,9 @@ function affos_autoload()
             require_once $file;
         }
     }
+
+    // Initialize CPT registration
+    new Affos_CPT();
 }
 add_action('after_setup_theme', 'affos_autoload', 1);
 
@@ -86,13 +89,50 @@ function affos_enqueue_assets()
 add_action('wp_enqueue_scripts', 'affos_enqueue_assets');
 
 /**
+ * Fallback menu when no menu is assigned
+ */
+if (!function_exists('affos_fallback_menu')) {
+    function affos_fallback_menu()
+    {
+        ?>
+        <a href="<?php echo esc_url(home_url('/')); ?>" class="<?php echo is_front_page() ? 'active' : ''; ?>">
+            <?php esc_html_e('Beranda', 'affos'); ?>
+        </a>
+        <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>">
+            <?php esc_html_e('Produk', 'affos'); ?>
+        </a>
+        <a href="<?php echo esc_url(get_post_type_archive_link('review')); ?>">
+            <?php esc_html_e('Ulasan', 'affos'); ?>
+        </a>
+        <?php
+        $compare_page = get_option('affos_compare_page');
+        if ($compare_page) {
+            ?>
+            <a href="<?php echo esc_url(get_permalink($compare_page)); ?>">
+                <?php esc_html_e('Bandingkan', 'affos'); ?>
+            </a>
+            <?php
+        }
+        ?>
+        <a href="<?php echo esc_url(home_url('/blog/')); ?>">
+            <?php esc_html_e('Blog', 'affos'); ?>
+        </a>
+        <?php
+    }
+}
+
+/**
  * Theme setup
  */
 function affos_theme_setup()
 {
+    // Load text domain for translations
+    load_theme_textdomain('affos', get_template_directory() . '/languages');
+
     // Add theme support
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
+    add_theme_support('automatic-feed-links');
     add_theme_support('html5', array(
         'search-form',
         'comment-form',
@@ -110,6 +150,7 @@ function affos_theme_setup()
     ));
     add_theme_support('editor-styles');
     add_theme_support('responsive-embeds');
+    add_theme_support('wp-block-styles');
 
     // Register navigation menus
     register_nav_menus(array(
@@ -118,6 +159,7 @@ function affos_theme_setup()
     ));
 
     // Set content width
+    global $content_width;
     if (!isset($content_width)) {
         $content_width = 1200;
     }

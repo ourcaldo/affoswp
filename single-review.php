@@ -84,7 +84,7 @@ while (have_posts()):
             <span class="sep">/</span>
             <a href="<?php echo esc_url(get_post_type_archive_link('review')); ?>"><?php esc_html_e('Ulasan', 'affos'); ?></a>
             <span class="sep">/</span>
-            <span class="current-crumb"><?php the_title(); ?></span>
+            <span class="current-crumb" aria-current="page"><?php echo esc_html(get_the_title()); ?></span>
         </nav>
     </div>
 
@@ -101,7 +101,7 @@ while (have_posts()):
                         <span>&middot;</span>
                         <span><?php printf(__('%d menit baca', 'affos'), $reading_time); ?></span>
                     </div>
-                    <h1><?php the_title(); ?></h1>
+                    <h1><?php echo esc_html(get_the_title()); ?></h1>
                     <?php if (has_excerpt()): ?>
                         <p class="excerpt"><?php echo esc_html(get_the_excerpt()); ?></p>
                     <?php endif; ?>

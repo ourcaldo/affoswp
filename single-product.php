@@ -143,7 +143,7 @@ while (have_posts()):
                     <a href="<?php echo esc_url(get_term_link($categories[0])); ?>"><?php echo esc_html($category_name); ?></a>
                 <?php endif; ?>
                 <span class="sep">&rsaquo;</span>
-                <span class="current-crumb"><?php the_title(); ?></span>
+                <span class="current-crumb" aria-current="page"><?php echo esc_html(get_the_title()); ?></span>
             </nav>
         </div>
 
@@ -167,7 +167,7 @@ while (have_posts()):
                             <span class="badge"><?php echo esc_html($brand_name); ?></span>
                         <?php endif; ?>
                     </div>
-                    <h1><?php the_title(); ?></h1>
+                    <h1><?php echo esc_html(get_the_title()); ?></h1>
                     <?php if (has_excerpt()): ?>
                         <p class="tagline"><?php echo esc_html(get_the_excerpt()); ?></p>
                     <?php endif; ?>

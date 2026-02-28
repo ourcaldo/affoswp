@@ -87,35 +87,3 @@ $compare_url = $compare_page_id ? get_permalink($compare_page_id) : home_url('/b
             </nav>
         </div>
     </div>
-
-    <?php
-    /**
-     * Fallback menu when no menu is assigned
-     */
-    function affos_fallback_menu()
-    {
-        ?>
-        <a href="<?php echo esc_url(home_url('/')); ?>" class="<?php echo is_front_page() ? 'active' : ''; ?>">
-            <?php esc_html_e('Beranda', 'affos'); ?>
-        </a>
-        <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>">
-            <?php esc_html_e('Produk', 'affos'); ?>
-        </a>
-        <a href="<?php echo esc_url(get_post_type_archive_link('review')); ?>">
-            <?php esc_html_e('Ulasan', 'affos'); ?>
-        </a>
-        <?php
-        $compare_page = get_option('affos_compare_page');
-        if ($compare_page) {
-            ?>
-            <a href="<?php echo esc_url(get_permalink($compare_page)); ?>">
-                <?php esc_html_e('Bandingkan', 'affos'); ?>
-            </a>
-            <?php
-        }
-        ?>
-        <a href="<?php echo esc_url(home_url('/blog/')); ?>">
-            <?php esc_html_e('Blog', 'affos'); ?>
-        </a>
-        <?php
-    }

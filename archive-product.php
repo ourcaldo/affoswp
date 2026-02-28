@@ -60,7 +60,7 @@ $product_count = wp_count_posts('product')->publish;
 
         <div class="filter-search">
             <i class="ri-search-line" aria-hidden="true"></i>
-            <input type="text" placeholder="<?php esc_attr_e('Cari produk...', 'affos'); ?>">
+            <input type="text" placeholder="<?php esc_attr_e('Cari produk...', 'affos'); ?>" aria-label="<?php esc_attr_e('Cari produk', 'affos'); ?>">
         </div>
     </div>
 </div>
@@ -84,8 +84,8 @@ $product_count = wp_count_posts('product')->publish;
         <?php
         the_posts_pagination(array(
             'mid_size' => 2,
-            'prev_text' => '<i class="ri-arrow-left-s-line"></i>',
-            'next_text' => '<i class="ri-arrow-right-s-line"></i>',
+            'prev_text' => '<span class="screen-reader-text">' . __('Sebelumnya', 'affos') . '</span><i class="ri-arrow-left-s-line" aria-hidden="true"></i>',
+            'next_text' => '<span class="screen-reader-text">' . __('Selanjutnya', 'affos') . '</span><i class="ri-arrow-right-s-line" aria-hidden="true"></i>',
         ));
         ?>
     </div>
