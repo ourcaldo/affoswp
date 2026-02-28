@@ -148,27 +148,12 @@ img {
 
 /* Reduced Motion - Respect user preference */
 @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-
-    .reveal {
-        opacity: 1;
-        transform: none;
-    }
-
-    [data-anim] {
-        opacity: 1;
-        transform: none;
-    }
-
+    .reveal,
+    [data-anim],
     [data-anim].animated {
-        opacity: 1;
-        transform: none;
+        opacity: 1 !important;
+        transform: none !important;
+        transition-duration: 0.01ms !important;
+        animation: none !important;
     }
 }
