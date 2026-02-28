@@ -47,6 +47,7 @@ $is_featured = isset($args['featured']) ? $args['featured'] : false;
                 <?php echo get_the_post_thumbnail($review_id, 'medium_large', array('class' => 'review-cover')); ?>
             <?php else: ?>
                 <div class="review-img-placeholder">
+                    <i class="ri-file-text-line" aria-hidden="true"></i>
                 </div>
             <?php endif; ?>
         </div>

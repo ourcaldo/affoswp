@@ -200,11 +200,7 @@
     transform: translateY(-5px);
 }
 
-.cat-icon {
-    font-size: 2.5rem;
-    color: var(--accent-color);
-    margin-bottom: 8px;
-}
+/* .cat-icon styles defined in hero.css */
 
 .cat-name {
     font-weight: 700;

@@ -34,8 +34,9 @@
                     foreach ($social_links as $platform => $url) {
                         if (!empty($url)) {
                             printf(
-                                '<a href="%s" class="social-btn" target="_blank" rel="noopener noreferrer"><i class="ri-%s-line"></i></a>',
+                                '<a href="%s" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="%s"><i class="ri-%s-line" aria-hidden="true"></i></a>',
                                 esc_url($url),
+                                esc_attr(ucfirst($platform)),
                                 esc_attr($platform)
                             );
                         }
@@ -44,9 +45,9 @@
                     // Default social icons if none set
                     if (empty(array_filter($social_links))) {
                         ?>
-                        <a href="#" class="social-btn"><i class="ri-instagram-line"></i></a>
-                        <a href="#" class="social-btn"><i class="ri-youtube-line"></i></a>
-                        <a href="#" class="social-btn"><i class="ri-twitter-x-line"></i></a>
+                        <a href="#" class="social-btn" aria-label="Instagram"><i class="ri-instagram-line" aria-hidden="true"></i></a>
+                        <a href="#" class="social-btn" aria-label="YouTube"><i class="ri-youtube-line" aria-hidden="true"></i></a>
+                        <a href="#" class="social-btn" aria-label="Twitter"><i class="ri-twitter-x-line" aria-hidden="true"></i></a>
                         <?php
                     }
                     ?>
@@ -96,20 +97,30 @@
             <!-- Company Column -->
             <div class="footer-col">
                 <h4><?php esc_html_e('Perusahaan', 'affos'); ?></h4>
-                <ul class="footer-links">
-                    <?php
+                <?php
+                if (has_nav_menu('footer')) {
+                    wp_nav_menu(array(
+                        'theme_location' => 'footer',
+                        'container'      => false,
+                        'menu_class'     => 'footer-links',
+                        'depth'          => 1,
+                    ));
+                } else {
+                    // Fallback when no menu is assigned
                     $about_page = get_option('affos_about_page');
                     $contact_page = get_option('affos_contact_page');
                     ?>
-                    <li><a
-                            href="<?php echo $about_page ? esc_url(get_permalink($about_page)) : '#'; ?>"><?php esc_html_e('Tentang Kami', 'affos'); ?></a>
-                    </li>
-                    <li><a
-                            href="<?php echo $contact_page ? esc_url(get_permalink($contact_page)) : '#'; ?>"><?php esc_html_e('Kontak', 'affos'); ?></a>
-                    </li>
-                    <li><a href="#"><?php esc_html_e('Karir', 'affos'); ?></a></li>
-                    <li><a href="#"><?php esc_html_e('Pasang Iklan', 'affos'); ?></a></li>
-                </ul>
+                    <ul class="footer-links">
+                        <li><a
+                                href="<?php echo $about_page ? esc_url(get_permalink($about_page)) : '#'; ?>"><?php esc_html_e('Tentang Kami', 'affos'); ?></a>
+                        </li>
+                        <li><a
+                                href="<?php echo $contact_page ? esc_url(get_permalink($contact_page)) : '#'; ?>"><?php esc_html_e('Kontak', 'affos'); ?></a>
+                        </li>
+                    </ul>
+                    <?php
+                }
+                ?>
             </div>
 
             <!-- Legal Column -->
@@ -134,7 +145,7 @@
         <div class="footer-bottom">
             <p>&copy; <?php echo esc_html(date('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?>.
                 <?php esc_html_e('All rights reserved.', 'affos'); ?></p>
-            <p><?php esc_html_e('Made with', 'affos'); ?> <i class="ri-heart-fill"></i>
+            <p><?php esc_html_e('Made with', 'affos'); ?> <i class="ri-heart-fill" aria-hidden="true"></i>
                 <?php esc_html_e('in Indonesia', 'affos'); ?></p>
         </div>
     </div>

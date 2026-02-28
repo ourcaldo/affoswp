@@ -440,6 +440,11 @@
     background: rgba(255, 255, 255, 0.3);
 }
 
+.buy-link-logo {
+    width: 20px;
+    height: auto;
+}
+
 /* ========================
    BLOG PAGE STYLES
    ======================== */
@@ -669,6 +674,16 @@
     height: 160px;
     background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
     position: relative;
+}
+
+.blog-img-placeholder {
+    height: 160px;
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 2.5rem;
 }
 
 .blog-cat-badge {

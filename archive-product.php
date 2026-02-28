@@ -15,22 +15,24 @@ $categories = get_terms(array(
 ));
 ?>
 
+<main id="main-content">
+
 <!-- Hero Section - Products (Purple Theme) -->
 <section class="archive-hero">
     <div class="container">
         <div class="archive-hero-content">
             <div class="archive-hero-text">
                 <span class="archive-badge">
-                    <i class="ri-scales-3-line"></i>
-                    <?php esc_html_e('Fitur Perbandingan', 'affos'); ?>
+                    <i class="ri-smartphone-line" aria-hidden="true"></i>
+                    <?php esc_html_e('Katalog Gadget', 'affos'); ?>
                 </span>
                 <h1>
-                    <?php esc_html_e('Bandingkan Gadget', 'affos'); ?><br><span>
-                        <?php esc_html_e('Secara Head-to-Head', 'affos'); ?>
+                    <?php esc_html_e('Jelajahi Semua', 'affos'); ?><br><span>
+                        <?php esc_html_e('Gadget Terbaru', 'affos'); ?>
                     </span>
                 </h1>
                 <p>
-                    <?php esc_html_e('Pilih hingga 3 gadget dan bandingkan spesifikasi, fitur, dan harga secara langsung untuk membuat keputusan terbaik.', 'affos'); ?>
+                    <?php esc_html_e('Temukan gadget impian Anda dari koleksi lengkap kami. Bandingkan spesifikasi, fitur, dan harga untuk membuat keputusan terbaik.', 'affos'); ?>
                 </p>
                 <div class="archive-hero-stats">
                     <div class="stat-box">
@@ -165,6 +167,8 @@ $categories = get_terms(array(
         ?>
     </div>
 </section>
+
+</main>
 
 <?php
 get_footer();

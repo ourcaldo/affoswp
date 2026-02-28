@@ -125,21 +125,21 @@ while (have_posts()):
     }
     ?>
 
-    <main class="product-page">
+    <main class="product-page" id="main-content">
         <div class="container">
             <!-- Breadcrumb -->
-            <nav class="breadcrumb">
+            <nav class="breadcrumb" aria-label="<?php esc_attr_e('Breadcrumb', 'affos'); ?>">
                 <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>">
                     <?php esc_html_e('Produk', 'affos'); ?>
                 </a>
-                <i class="ri-arrow-right-s-line"></i>
+                <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
                 <?php if ($category_name): ?>
                     <a href="<?php echo esc_url(get_term_link($categories[0])); ?>">
                         <?php echo esc_html($category_name); ?>
                     </a>
-                    <i class="ri-arrow-right-s-line"></i>
+                    <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
                 <?php endif; ?>
-                <span>
+                <span aria-current="page">
                     <?php the_title(); ?>
                 </span>
             </nav>
@@ -152,15 +152,9 @@ while (have_posts()):
                             <?php the_post_thumbnail('large', array('class' => 'gallery-main-img')); ?>
                         <?php else: ?>
                             <div class="gallery-main-placeholder">
-                                <i class="ri-smartphone-line"></i>
+                                <i class="ri-smartphone-line" aria-hidden="true"></i>
                             </div>
                         <?php endif; ?>
-                    </div>
-                    <div class="gallery-thumbs">
-                        <div class="thumb active"></div>
-                        <div class="thumb"></div>
-                        <div class="thumb"></div>
-                        <div class="thumb"></div>
                     </div>
                 </div>
 

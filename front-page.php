@@ -22,6 +22,8 @@ $product_count = wp_count_posts('product')->publish;
 $review_count = wp_count_posts('review')->publish;
 ?>
 
+<main id="main-content">
+
 <!-- Hero Section - Two Column Layout -->
 <section class="hero-v2">
     <div class="container">
@@ -316,6 +318,8 @@ $review_count = wp_count_posts('review')->publish;
         </div>
     </div>
 </section>
+
+</main>
 
 <?php
 get_footer();

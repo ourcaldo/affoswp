@@ -363,6 +363,8 @@ add_action('init', 'affos_maybe_flush_rewrite', 99);
  */
 function affos_get_compare_data()
 {
+    check_ajax_referer('affos_nonce');
+
     $ids = isset($_GET['ids']) ? sanitize_text_field($_GET['ids']) : '';
 
     if (empty($ids)) {
@@ -414,6 +416,8 @@ add_action('wp_ajax_nopriv_affos_get_compare_data', 'affos_get_compare_data');
  */
 function affos_get_compare_slugs()
 {
+    check_ajax_referer('affos_nonce');
+
     $ids = isset($_GET['ids']) ? sanitize_text_field($_GET['ids']) : '';
 
     if (empty($ids)) {
@@ -446,6 +450,8 @@ add_action('wp_ajax_nopriv_affos_get_compare_slugs', 'affos_get_compare_slugs');
  */
 function affos_get_compare_names()
 {
+    check_ajax_referer('affos_nonce');
+
     $ids = isset($_GET['ids']) ? sanitize_text_field($_GET['ids']) : '';
 
     if (empty($ids)) {

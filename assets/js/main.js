@@ -6,11 +6,23 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // ========================
+    // REDUCED MOTION CHECK
+    // ========================
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ========================
     // SCROLL-TRIGGERED ANIMATIONS
     // ========================
 
     const initAnimations = () => {
         const animatedSections = document.querySelectorAll('[data-anim]');
+
+        if (prefersReducedMotion) {
+            // Show everything immediately without animation
+            animatedSections.forEach(section => section.classList.add('animated'));
+            return;
+        }
 
         const observerOptions = {
             threshold: 0.15,
@@ -21,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('animated');
+                    animObserver.unobserve(entry.target);
                 }
             });
         }, observerOptions);
@@ -35,6 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================
 
     const init3DCards = () => {
+        if (prefersReducedMotion) return;
+
         // Product card hover is now handled by CSS (subtle translateY lift)
         // Only apply tilt to bento-cards if present
         const bentoCards = document.querySelectorAll('.bento-card');
@@ -52,9 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const rotateY = (centerX - x) / 25;
 
                 card.style.transform = `
-                    perspective(1000px) 
-                    rotateX(${rotateX}deg) 
-                    rotateY(${rotateY}deg) 
+                    perspective(1000px)
+                    rotateX(${rotateX}deg)
+                    rotateY(${rotateY}deg)
                     translateY(-4px)
                 `;
             });
@@ -74,9 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!header) return;
 
         let lastScroll = 0;
+        let ticking = false;
         header.style.transition = 'transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease';
 
-        window.addEventListener('scroll', () => {
+        const updateHeader = () => {
             const currentScroll = window.scrollY;
 
             // Background change
@@ -96,7 +112,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             lastScroll = currentScroll;
-        });
+            ticking = false;
+        };
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(updateHeader);
+                ticking = true;
+            }
+        }, { passive: true });
     };
 
     // ========================
@@ -117,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     window.scrollTo({
                         top: targetPosition,
-                        behavior: 'smooth'
+                        behavior: prefersReducedMotion ? 'auto' : 'smooth'
                     });
                 }
             });
@@ -145,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCompareBar();
 
         // Handle compare buttons - support multiple selectors
-        const compareBtns = document.querySelectorAll('.add-to-compare, .action-btn[title="Bandingkan"], [data-compare-id]');
+        const compareBtns = document.querySelectorAll('.add-to-compare, .action-btn[aria-label="Bandingkan"], [data-compare-id]');
         compareBtns.forEach((btn) => {
             // Get product ID from data attribute or closest product card
             let pid = btn.dataset.compareId || btn.dataset.id;
@@ -207,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Build initial thumbs (names will be fetched async)
                 let thumbsHtml = state.map(id => `
                     <div class="mini-thumb" data-thumb-id="${id}" data-tooltip="Memuat...">
-                        <i class="ri-smartphone-line"></i>
+                        <i class="ri-smartphone-line" aria-hidden="true"></i>
                     </div>
                 `).join('');
 
@@ -226,7 +250,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Fetch product names for tooltips
                 const ajaxUrl = typeof affosData !== 'undefined' ? affosData.ajaxUrl : '/wp-admin/admin-ajax.php';
-                fetch(ajaxUrl + '?action=affos_get_compare_names&ids=' + state.join(','))
+                const nonce = typeof affosData !== 'undefined' ? affosData.nonce : '';
+                fetch(ajaxUrl + '?action=affos_get_compare_names&ids=' + state.join(',') + '&_wpnonce=' + nonce)
                     .then(r => r.json())
                     .then(data => {
                         if (data.success && data.data) {
@@ -243,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 document.getElementById('clear-compare')?.addEventListener('click', () => {
                     localStorage.setItem('affos_compare', '[]');
-                    document.querySelectorAll('.add-to-compare, .action-btn[title="Bandingkan"], [data-compare-id]').forEach(b => {
+                    document.querySelectorAll('.add-to-compare, .action-btn[aria-label="Bandingkan"], [data-compare-id]').forEach(b => {
                         b.classList.remove('active');
                         b.style.color = '';
                         b.style.background = '';
@@ -259,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         return;
                     }
                     // Fetch SEO-friendly URL from server
-                    fetch(ajaxUrl + '?action=affos_get_compare_slugs&ids=' + state.join(','))
+                    fetch(ajaxUrl + '?action=affos_get_compare_slugs&ids=' + state.join(',') + '&_wpnonce=' + nonce)
                         .then(response => response.json())
                         .then(data => {
                             if (data.success && data.data.url) {
@@ -289,6 +314,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!toast) {
             toast = document.createElement('div');
             toast.className = 'toast';
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'polite');
             toast.style.cssText = `
                 position: fixed;
                 bottom: 100px;
@@ -325,6 +352,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================
 
     const initTypingEffect = () => {
+        if (prefersReducedMotion) return;
+
         const searchInput = document.querySelector('.search-input');
         if (!searchInput) return;
 
@@ -336,17 +365,31 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
 
         let currentIndex = 0;
+        let intervalId;
 
-        setInterval(() => {
-            currentIndex = (currentIndex + 1) % placeholders.length;
-            searchInput.style.transition = 'opacity 0.3s';
-            searchInput.style.opacity = '0.5';
+        const startTyping = () => {
+            intervalId = setInterval(() => {
+                currentIndex = (currentIndex + 1) % placeholders.length;
+                searchInput.style.transition = 'opacity 0.3s';
+                searchInput.style.opacity = '0.5';
 
-            setTimeout(() => {
-                searchInput.placeholder = placeholders[currentIndex];
-                searchInput.style.opacity = '1';
-            }, 150);
-        }, 4000);
+                setTimeout(() => {
+                    searchInput.placeholder = placeholders[currentIndex];
+                    searchInput.style.opacity = '1';
+                }, 150);
+            }, 4000);
+        };
+
+        // Pause when tab is not visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearInterval(intervalId);
+            } else {
+                startTyping();
+            }
+        });
+
+        startTyping();
     };
 
     // ========================
@@ -577,13 +620,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!filterBtns.length || !filterableCards.length) return;
 
+        // Set initial aria-pressed
+        filterBtns.forEach(btn => {
+            btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
+        });
+
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const filter = btn.dataset.filter;
 
-                // Update active state
-                filterBtns.forEach(b => b.classList.remove('active'));
+                // Update active state and aria-pressed
+                filterBtns.forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-pressed', 'false');
+                });
                 btn.classList.add('active');
+                btn.setAttribute('aria-pressed', 'true');
 
                 // Filter cards
                 filterableCards.forEach(card => {
@@ -591,13 +643,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (filter === 'all' || cardCategory === filter) {
                         card.style.display = '';
-                        card.style.animation = 'fadeInUp 0.4s ease forwards';
+                        if (!prefersReducedMotion) {
+                            card.style.animation = 'fadeInUp 0.4s ease forwards';
+                        }
                     } else {
                         card.style.display = 'none';
                     }
                 });
             });
         });
+    };
+
+    // ========================
+    // FOCUS TRAP UTILITY
+    // ========================
+
+    const trapFocus = (element) => {
+        const focusableSelectors = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+        const focusableElements = element.querySelectorAll(focusableSelectors);
+        const firstFocusable = focusableElements[0];
+        const lastFocusable = focusableElements[focusableElements.length - 1];
+
+        const handleTab = (e) => {
+            if (e.key !== 'Tab') return;
+
+            if (e.shiftKey) {
+                if (document.activeElement === firstFocusable) {
+                    lastFocusable.focus();
+                    e.preventDefault();
+                }
+            } else {
+                if (document.activeElement === lastFocusable) {
+                    firstFocusable.focus();
+                    e.preventDefault();
+                }
+            }
+        };
+
+        element.addEventListener('keydown', handleTab);
+        return () => element.removeEventListener('keydown', handleTab);
     };
 
     // ========================
@@ -612,15 +696,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!menuToggle || !mobileMenu) return;
 
-        menuToggle.addEventListener('click', () => {
+        let removeTrap = null;
+
+        const openMobileMenu = () => {
             mobileMenu.classList.add('active');
             document.body.style.overflow = 'hidden';
-        });
+            menuToggle.setAttribute('aria-expanded', 'true');
+            removeTrap = trapFocus(mobileMenu);
+            // Focus the close button
+            if (closeMenu) closeMenu.focus();
+        };
 
         const closeMobileMenu = () => {
             mobileMenu.classList.remove('active');
             document.body.style.overflow = '';
+            menuToggle.setAttribute('aria-expanded', 'false');
+            if (removeTrap) {
+                removeTrap();
+                removeTrap = null;
+            }
+            // Restore focus to toggle
+            menuToggle.focus();
         };
+
+        menuToggle.addEventListener('click', openMobileMenu);
 
         if (closeMenu) {
             closeMenu.addEventListener('click', closeMobileMenu);
@@ -633,6 +732,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Close on outside click
         mobileMenu.addEventListener('click', (e) => {
             if (e.target === mobileMenu) {
+                closeMobileMenu();
+            }
+        });
+
+        // Close on Escape
+        mobileMenu.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
                 closeMobileMenu();
             }
         });
@@ -650,26 +756,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!searchToggle) return;
 
-        searchToggle.addEventListener('click', () => {
+        let removeTrap = null;
+
+        const openSearch = () => {
             if (searchOverlay) {
                 searchOverlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
+                removeTrap = trapFocus(searchOverlay);
                 if (searchInput) searchInput.focus();
             }
-        });
+        };
 
-        if (searchClose) {
-            searchClose.addEventListener('click', () => {
+        const closeSearch = () => {
+            if (searchOverlay) {
                 searchOverlay.classList.remove('active');
                 document.body.style.overflow = '';
-            });
+                if (removeTrap) {
+                    removeTrap();
+                    removeTrap = null;
+                }
+                // Restore focus to toggle
+                searchToggle.focus();
+            }
+        };
+
+        searchToggle.addEventListener('click', openSearch);
+
+        if (searchClose) {
+            searchClose.addEventListener('click', closeSearch);
         }
 
         // Close on ESC key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && searchOverlay?.classList.contains('active')) {
-                searchOverlay.classList.remove('active');
-                document.body.style.overflow = '';
+                closeSearch();
             }
         });
     };
@@ -687,6 +807,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let currentSlide = 0;
         let autoplayInterval;
+        let touchStartX = 0;
+        let touchEndX = 0;
 
         const goToSlide = (index) => {
             slides.forEach((slide, i) => {
@@ -703,6 +825,11 @@ document.addEventListener('DOMContentLoaded', () => {
             goToSlide(next);
         };
 
+        const prevSlide = () => {
+            const prev = (currentSlide - 1 + slides.length) % slides.length;
+            goToSlide(prev);
+        };
+
         // Click on indicators
         indicators.forEach((indicator, index) => {
             indicator.addEventListener('click', () => {
@@ -711,8 +838,27 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Autoplay
+        // Touch/swipe support
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        carousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+                resetAutoplay();
+            }
+        }, { passive: true });
+
+        // Autoplay (skip if reduced motion)
         const startAutoplay = () => {
+            if (prefersReducedMotion) return;
             autoplayInterval = setInterval(nextSlide, 5000);
         };
 
@@ -720,6 +866,15 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(autoplayInterval);
             startAutoplay();
         };
+
+        // Pause autoplay when tab is not visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearInterval(autoplayInterval);
+            } else {
+                startAutoplay();
+            }
+        });
 
         startAutoplay();
     };
@@ -786,5 +941,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroCarousel();
     initShareButtons();
 
-    console.log('🚀 AffosWP UI/UX v2 Loaded');
+    console.log('AffosWP UI/UX v2 Loaded');
 });

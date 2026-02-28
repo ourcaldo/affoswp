@@ -15,6 +15,8 @@ $categories = get_terms(array(
 ));
 ?>
 
+<main id="main-content">
+
 <!-- Hero Section - Reviews (Teal Theme) -->
 <section class="reviews-hero">
     <div class="container">
@@ -191,6 +193,8 @@ $categories = get_terms(array(
         ?>
     </div>
 </section>
+
+</main>
 
 <?php
 get_footer();

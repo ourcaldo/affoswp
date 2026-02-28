@@ -22,6 +22,8 @@ $compare_url = $compare_page_id ? get_permalink($compare_page_id) : home_url('/b
 <body <?php body_class(); ?> data-compare-url="<?php echo esc_url($compare_url); ?>">
     <?php wp_body_open(); ?>
 
+    <a class="skip-link" href="#main-content"><?php esc_html_e('Langsung ke konten', 'affos'); ?></a>
+
     <!-- Header -->
     <header>
         <div class="container">
@@ -37,7 +39,7 @@ $compare_url = $compare_page_id ? get_permalink($compare_page_id) : home_url('/b
             }
             ?>
 
-            <nav class="nav-links">
+            <nav class="nav-links" aria-label="<?php esc_attr_e('Menu utama', 'affos'); ?>">
                 <?php
                 wp_nav_menu(array(
                     'theme_location' => 'primary',
@@ -50,8 +52,8 @@ $compare_url = $compare_page_id ? get_permalink($compare_page_id) : home_url('/b
             </nav>
 
             <div class="header-actions">
-                <button class="icon-btn search-toggle" aria-label="<?php esc_attr_e('Search', 'affos'); ?>">
-                    <i class="ri-search-line"></i>
+                <button class="icon-btn search-toggle" id="search-toggle" aria-label="<?php esc_attr_e('Search', 'affos'); ?>">
+                    <i class="ri-search-line" aria-hidden="true"></i>
                 </button>
                 <?php
                 // Subscribe button - links to newsletter or custom URL
@@ -62,20 +64,20 @@ $compare_url = $compare_page_id ? get_permalink($compare_page_id) : home_url('/b
                 </a>
 
                 <!-- Mobile menu toggle -->
-                <button class="mobile-menu-toggle" aria-label="<?php esc_attr_e('Menu', 'affos'); ?>">
-                    <i class="ri-menu-line"></i>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="<?php esc_attr_e('Menu', 'affos'); ?>" aria-expanded="false" aria-controls="mobile-menu">
+                    <i class="ri-menu-line" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
     </header>
 
     <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay">
+    <div class="mobile-menu-overlay" id="mobile-menu" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e('Menu navigasi', 'affos'); ?>">
         <div class="mobile-menu-content">
-            <button class="mobile-menu-close" aria-label="<?php esc_attr_e('Close menu', 'affos'); ?>">
-                <i class="ri-close-line"></i>
+            <button class="mobile-menu-close" id="close-mobile-menu" aria-label="<?php esc_attr_e('Close menu', 'affos'); ?>">
+                <i class="ri-close-line" aria-hidden="true"></i>
             </button>
-            <nav class="mobile-nav">
+            <nav class="mobile-nav" aria-label="<?php esc_attr_e('Menu mobile', 'affos'); ?>">
                 <?php
                 wp_nav_menu(array(
                     'theme_location' => 'primary',

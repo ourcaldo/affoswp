@@ -1,6 +1,6 @@
 /**
  * Affos Theme - Main CSS
- * 
+ *
  * This file imports all modular CSS files.
  * Edit individual modules in assets/css/ for maintenance.
  *
@@ -12,12 +12,10 @@
 @import url('base.css');
 
 /* Components */
-@import url('buttons.css');
 @import url('cards.css');
 
 /* Layout */
 @import url('header.css');
-@import url('footer.css');
 
 /* Pages */
 @import url('hero.css');
@@ -29,7 +27,3 @@
 @import url('single-post.css');
 @import url('compare.css');
 @import url('404.css');
-
-/* Global */
-@import url('animations.css');
-@import url('responsive.css');

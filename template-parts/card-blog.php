@@ -51,6 +51,10 @@ $is_featured = isset($args['featured']) ? $args['featured'] : false;
             <?php endif; ?>
             <?php if (has_post_thumbnail($post_id)): ?>
                 <?php echo get_the_post_thumbnail($post_id, 'medium_large', array('class' => 'blog-cover')); ?>
+            <?php else: ?>
+                <div class="blog-img-placeholder">
+                    <i class="ri-article-line" aria-hidden="true"></i>
+                </div>
             <?php endif; ?>
         </div>
         <div class="blog-content">

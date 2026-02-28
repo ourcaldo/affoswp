@@ -7,7 +7,11 @@
  */
 
 get_header();
+?>
 
+<main id="main-content">
+
+<?php
 while (have_posts()):
     the_post();
     $review_id = get_the_ID();
@@ -62,19 +66,19 @@ while (have_posts()):
     <!-- Review Header -->
     <section class="review-header">
         <div class="container">
-            <div class="review-breadcrumb">
+            <nav class="review-breadcrumb" aria-label="<?php esc_attr_e('Breadcrumb', 'affos'); ?>">
                 <a href="<?php echo esc_url(home_url('/')); ?>">
                     <?php esc_html_e('Beranda', 'affos'); ?>
                 </a>
-                <i class="ri-arrow-right-s-line"></i>
+                <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
                 <a href="<?php echo esc_url(get_post_type_archive_link('review')); ?>">
                     <?php esc_html_e('Ulasan', 'affos'); ?>
                 </a>
-                <i class="ri-arrow-right-s-line"></i>
-                <span>
+                <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
+                <span aria-current="page">
                     <?php the_title(); ?>
                 </span>
-            </div>
+            </nav>
 
             <div class="review-header-content">
                 <div class="review-header-text">
@@ -180,7 +184,7 @@ while (have_posts()):
                                             rel="noopener">
                                             <?php if (!empty($store_info['logo_url'])): ?>
                                                 <img src="<?php echo esc_url($store_info['logo_url']); ?>"
-                                                    alt="<?php echo esc_attr($store_info['name']); ?>" style="width: 20px; height: auto;">
+                                                    alt="<?php echo esc_attr($store_info['name']); ?>" class="buy-link-logo">
                                             <?php else: ?>
                                                 <i class="<?php echo esc_attr($store_info['icon']); ?>"></i>
                                             <?php endif; ?>
@@ -234,7 +238,7 @@ while (have_posts()):
                                         <span class="rating-label">
                                             <?php echo esc_html($rating['label']); ?>
                                         </span>
-                                        <div class="rating-bar">
+                                        <div class="rating-bar" role="progressbar" aria-valuenow="<?php echo esc_attr($rating['value']); ?>" aria-valuemin="0" aria-valuemax="10" aria-label="<?php echo esc_attr($rating['label']); ?>">
                                             <div class="rating-fill" style="width: <?php echo esc_attr($percentage); ?>%"></div>
                                         </div>
                                         <span class="rating-score">
@@ -301,16 +305,16 @@ while (have_posts()):
                             <?php esc_html_e('Bagikan:', 'affos'); ?>
                         </span>
                         <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(get_permalink()); ?>&text=<?php echo urlencode(get_the_title()); ?>"
-                            target="_blank" rel="noopener" class="share-btn">
-                            <i class="ri-twitter-x-line"></i>
+                            target="_blank" rel="noopener" class="share-btn" aria-label="<?php esc_attr_e('Bagikan di Twitter', 'affos'); ?>">
+                            <i class="ri-twitter-x-line" aria-hidden="true"></i>
                         </a>
                         <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(get_permalink()); ?>"
-                            target="_blank" rel="noopener" class="share-btn">
-                            <i class="ri-facebook-fill"></i>
+                            target="_blank" rel="noopener" class="share-btn" aria-label="<?php esc_attr_e('Bagikan di Facebook', 'affos'); ?>">
+                            <i class="ri-facebook-fill" aria-hidden="true"></i>
                         </a>
                         <a href="https://wa.me/?text=<?php echo urlencode(get_the_title() . ' ' . get_permalink()); ?>"
-                            target="_blank" rel="noopener" class="share-btn">
-                            <i class="ri-whatsapp-line"></i>
+                            target="_blank" rel="noopener" class="share-btn" aria-label="<?php esc_attr_e('Bagikan via WhatsApp', 'affos'); ?>">
+                            <i class="ri-whatsapp-line" aria-hidden="true"></i>
                         </a>
                     </div>
                 </article>
@@ -350,4 +354,9 @@ while (have_posts()):
 
     <?php
 endwhile;
+?>
+
+</main>
+
+<?php
 get_footer();

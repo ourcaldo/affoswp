@@ -83,12 +83,12 @@ if (strpos(strtolower($status), 'available') !== false) {
         </div>
     </a>
     <div class="card-actions">
-        <button class="action-btn add-to-compare" title="<?php esc_attr_e('Bandingkan', 'affos'); ?>"
+        <button class="action-btn add-to-compare" aria-label="<?php esc_attr_e('Bandingkan', 'affos'); ?>"
             data-compare-id="<?php echo esc_attr($product_id); ?>">
-            <i class="ri-scales-3-line"></i>
+            <i class="ri-scales-3-line" aria-hidden="true"></i>
         </button>
-        <button class="action-btn" title="<?php esc_attr_e('Simpan', 'affos'); ?>">
-            <i class="ri-heart-line"></i>
+        <button class="action-btn" aria-label="<?php esc_attr_e('Simpan', 'affos'); ?>">
+            <i class="ri-heart-line" aria-hidden="true"></i>
         </button>
     </div>
 </article>

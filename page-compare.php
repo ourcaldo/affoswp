@@ -108,25 +108,53 @@ $total_cols = $product_count + ($show_add_slot ? 1 : 0);
                             <?php if ($index === 0): ?>
                                 <span class="product-badge recommended"><?php esc_html_e('Rekomendasi', 'affos'); ?></span>
                             <?php endif; ?>
-                            <button class="remove-product-btn" data-remove-id="<?php echo esc_attr($pid); ?>">
-                                <i class="ri-close-line"></i>
+                            <button class="remove-product-btn" data-remove-id="<?php echo esc_attr($pid); ?>" aria-label="<?php esc_attr_e('Hapus produk', 'affos'); ?>">
+                                <i class="ri-close-line" aria-hidden="true"></i>
                             </button>
                             <div class="product-image">
                                 <?php if ($thumbnail): ?>
                                     <img src="<?php echo esc_url($thumbnail); ?>"
                                         alt="<?php echo esc_attr($product->post_title); ?>">
                                 <?php else: ?>
-                                    <i class="ri-smartphone-line"></i>
+                                    <i class="ri-smartphone-line" aria-hidden="true"></i>
                                 <?php endif; ?>
                             </div>
                             <h3 class="product-name"><?php echo esc_html($product->post_title); ?></h3>
-                            <div class="product-rating">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-half-fill"></i>
-                                <span><?php echo esc_html($review_count); ?></span>
+                            <div class="product-rating" aria-hidden="true">
+                                <?php
+                                // Get actual review score for this product
+                                $product_review = get_posts(array(
+                                    'post_type' => 'review',
+                                    'posts_per_page' => 1,
+                                    'meta_query' => array(
+                                        array(
+                                            'key' => '_review_product_id',
+                                            'value' => $pid,
+                                            'compare' => '=',
+                                        ),
+                                    ),
+                                ));
+                                $review_score = 0;
+                                if (!empty($product_review)) {
+                                    $review_score = (float) get_post_meta($product_review[0]->ID, '_review_score', true);
+                                }
+                                if ($review_score > 0):
+                                    $full_stars = floor($review_score / 2);
+                                    $half_star = ($review_score / 2) - $full_stars >= 0.25;
+                                    $empty_stars = 5 - $full_stars - ($half_star ? 1 : 0);
+                                    for ($s = 0; $s < $full_stars; $s++): ?>
+                                        <i class="ri-star-fill"></i>
+                                    <?php endfor;
+                                    if ($half_star): ?>
+                                        <i class="ri-star-half-fill"></i>
+                                    <?php endif;
+                                    for ($s = 0; $s < $empty_stars; $s++): ?>
+                                        <i class="ri-star-line"></i>
+                                    <?php endfor; ?>
+                                    <span><?php echo esc_html(number_format($review_score, 1)); ?></span>
+                                <?php else: ?>
+                                    <span><?php esc_html_e('Belum ada review', 'affos'); ?></span>
+                                <?php endif; ?>
                             </div>
                             <div class="product-availability">
                                 <?php if ($is_available): ?>
