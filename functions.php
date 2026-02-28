@@ -22,7 +22,6 @@ define('AFFOS_URI', get_template_directory_uri());
 function affos_autoload()
 {
     $classes = array(
-        'class-theme-setup',
         'class-cpt',
         'class-product-meta',
         'class-review-meta',
@@ -449,8 +448,7 @@ function affos_get_compare_data()
                 'display' => get_post_meta($id, '_display_type', true),
                 'camera' => get_post_meta($id, '_camera_main_specs', true),
                 'battery' => get_post_meta($id, '_battery_type', true),
-                'ram' => get_post_meta($id, '_memory_internal', true),
-                'storage' => get_post_meta($id, '_memory_internal', true),
+                'memory' => get_post_meta($id, '_memory_internal', true),
                 'os' => get_post_meta($id, '_platform_os', true),
                 'dimensions' => get_post_meta($id, '_body_dimensions', true),
                 'weight' => get_post_meta($id, '_body_weight', true),

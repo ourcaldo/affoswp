@@ -40,7 +40,7 @@ while (have_posts()) : the_post();
         ?>
         <a href="<?php echo esc_url($blog_url); ?>"><?php esc_html_e('Blog', 'affos'); ?></a>
         <span class="sep"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span>
-        <span class="current-crumb"><?php echo esc_html(wp_trim_words(get_the_title(), 5)); ?></span>
+        <span class="current-crumb" aria-current="page"><?php echo esc_html(wp_trim_words(get_the_title(), 5)); ?></span>
     </nav>
 </div>
 
@@ -60,7 +60,7 @@ while (have_posts()) : the_post();
             </div>
             <span class="author-name"><?php echo esc_html($author_name); ?></span>
             <span>&middot;</span>
-            <span><?php echo get_the_date('j M Y'); ?></span>
+            <span><?php echo esc_html(get_the_date('j M Y')); ?></span>
             <span>&middot;</span>
             <span><?php printf(esc_html__('%d menit baca', 'affos'), $reading_time); ?></span>
         </div>

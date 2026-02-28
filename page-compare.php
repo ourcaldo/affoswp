@@ -122,7 +122,7 @@ $grid_class = $total_cols >= 3 ? ' three-products' : '';
                             </button>
                             <div class="cp-img cat-<?php echo esc_attr($category_slug ?: 'smartphone'); ?>">
                                 <?php if ($thumbnail): ?>
-                                    <img src="<?php echo esc_url($thumbnail); ?>"
+                                    <img loading="lazy" src="<?php echo esc_url($thumbnail); ?>"
                                         alt="<?php echo esc_attr($product->post_title); ?>">
                                 <?php else: ?>
                                     <i class="ri-smartphone-line" aria-hidden="true"></i>

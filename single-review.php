@@ -81,9 +81,9 @@ while (have_posts()):
     <div class="container">
         <nav class="breadcrumb" aria-label="<?php esc_attr_e('Breadcrumb', 'affos'); ?>">
             <a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Beranda', 'affos'); ?></a>
-            <span class="sep">/</span>
+            <span class="sep"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span>
             <a href="<?php echo esc_url(get_post_type_archive_link('review')); ?>"><?php esc_html_e('Ulasan', 'affos'); ?></a>
-            <span class="sep">/</span>
+            <span class="sep"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span>
             <span class="current-crumb" aria-current="page"><?php echo esc_html(get_the_title()); ?></span>
         </nav>
     </div>
@@ -97,7 +97,7 @@ while (have_posts()):
                         <p class="category-label"><?php echo esc_html($category_name); ?></p>
                     <?php endif; ?>
                     <div class="post-meta">
-                        <span><?php echo get_the_date('j M Y'); ?></span>
+                        <span><?php echo esc_html(get_the_date('j M Y')); ?></span>
                         <span>&middot;</span>
                         <span><?php printf(esc_html__('%d menit baca', 'affos'), $reading_time); ?></span>
                     </div>
@@ -119,7 +119,7 @@ while (have_posts()):
                 <?php if ($score): ?>
                     <div class="score-circle <?php echo esc_attr($score_class); ?>">
                         <span class="score-num"><?php echo esc_html(number_format($score_num, 1)); ?></span>
-                        <span class="score-verdict"><?php echo esc_html($verdict ?: 'Good'); ?></span>
+                        <span class="score-verdict"><?php echo esc_html($verdict ?: __('Good', 'affos')); ?></span>
                     </div>
                 <?php endif; ?>
             </div>
@@ -258,17 +258,17 @@ while (have_posts()):
 
                 <!-- Share Row -->
                 <div class="share-row">
-                    <a href="https://twitter.com/intent/tweet?url=<?php echo rawurlencode(get_permalink()); ?>&text=<?php echo rawurlencode(get_the_title()); ?>"
+                    <a href="<?php echo esc_url('https://twitter.com/intent/tweet?url=' . rawurlencode(get_permalink()) . '&text=' . rawurlencode(get_the_title())); ?>"
                         target="_blank" rel="noopener" class="share-btn">
                         <i class="ri-twitter-x-line" aria-hidden="true"></i>
                         <?php esc_html_e('Twitter', 'affos'); ?>
                     </a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode(get_permalink()); ?>"
+                    <a href="<?php echo esc_url('https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode(get_permalink())); ?>"
                         target="_blank" rel="noopener" class="share-btn">
                         <i class="ri-facebook-line" aria-hidden="true"></i>
                         <?php esc_html_e('Facebook', 'affos'); ?>
                     </a>
-                    <a href="https://wa.me/?text=<?php echo rawurlencode(get_the_title() . ' ' . get_permalink()); ?>"
+                    <a href="<?php echo esc_url('https://wa.me/?text=' . rawurlencode(get_the_title() . ' ' . get_permalink())); ?>"
                         target="_blank" rel="noopener" class="share-btn">
                         <i class="ri-whatsapp-line" aria-hidden="true"></i>
                         <?php esc_html_e('WhatsApp', 'affos'); ?>

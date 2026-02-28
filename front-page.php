@@ -71,7 +71,7 @@ $spotlight = !empty($hero_products) ? $hero_products[0] : null;
                 </a>
                 <div class="hero-spotlight-body">
                     <p class="overline"><?php echo esc_html($s_cat_name); ?></p>
-                    <h3><?php echo esc_html($spotlight->post_title); ?></h3>
+                    <h2><?php echo esc_html($spotlight->post_title); ?></h2>
                     <?php if ($s_price): ?>
                         <p class="price"><?php echo esc_html($s_price); ?></p>
                     <?php endif; ?>
@@ -94,12 +94,12 @@ $spotlight = !empty($hero_products) ? $hero_products[0] : null;
                 </div>
                 <div class="hero-spotlight-body">
                     <p class="overline"><?php esc_html_e('Smartphone', 'affos'); ?></p>
-                    <h3><?php esc_html_e('Samsung Galaxy S24 Ultra', 'affos'); ?></h3>
-                    <p class="price">Rp 19.999.000</p>
+                    <h2><?php esc_html_e('Samsung Galaxy S24 Ultra', 'affos'); ?></h2>
+                    <p class="price"><?php esc_html_e('Rp 19.999.000', 'affos'); ?></p>
                     <div class="specs-row">
-                        <span class="spec-chip"><i class="ri-cpu-line" aria-hidden="true"></i> Snapdragon 8 Gen 3</span>
-                        <span class="spec-chip"><i class="ri-camera-line" aria-hidden="true"></i> 200MP</span>
-                        <span class="spec-chip"><i class="ri-battery-2-charge-line" aria-hidden="true"></i> 5000mAh</span>
+                        <span class="spec-chip"><i class="ri-cpu-line" aria-hidden="true"></i> <?php esc_html_e('Snapdragon 8 Gen 3', 'affos'); ?></span>
+                        <span class="spec-chip"><i class="ri-camera-line" aria-hidden="true"></i> <?php esc_html_e('200MP', 'affos'); ?></span>
+                        <span class="spec-chip"><i class="ri-battery-2-charge-line" aria-hidden="true"></i> <?php esc_html_e('5000mAh', 'affos'); ?></span>
                     </div>
                 </div>
             <?php endif; ?>

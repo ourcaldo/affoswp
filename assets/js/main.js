@@ -440,7 +440,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (searchInput) {
-                searchInput.addEventListener('input', applyFilters);
+                let filterTimeout;
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(filterTimeout);
+                    filterTimeout = setTimeout(function() {
+                        applyFilters();
+                    }, 250);
+                });
             }
         });
     };

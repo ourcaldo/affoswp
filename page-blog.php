@@ -57,7 +57,6 @@ $blog_query = new WP_Query(array(
     'posts_per_page' => get_option('posts_per_page'),
 ));
 
-$first = true;
 ?>
 
 <?php if ($blog_query->have_posts()): ?>

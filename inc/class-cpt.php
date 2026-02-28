@@ -141,6 +141,8 @@ class Affos_CPT
             'update_item' => __('Update Category', 'affos'),
             'add_new_item' => __('Add New Category', 'affos'),
             'new_item_name' => __('New Category Name', 'affos'),
+            'not_found' => __('No categories found', 'affos'),
+            'back_to_items' => __('&larr; Back to categories', 'affos'),
             'menu_name' => __('Categories', 'affos'),
         );
 
@@ -164,6 +166,8 @@ class Affos_CPT
             'update_item' => __('Update Brand', 'affos'),
             'add_new_item' => __('Add New Brand', 'affos'),
             'new_item_name' => __('New Brand Name', 'affos'),
+            'not_found' => __('No brands found', 'affos'),
+            'back_to_items' => __('&larr; Back to brands', 'affos'),
             'menu_name' => __('Brands', 'affos'),
         );
 

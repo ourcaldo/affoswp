@@ -136,13 +136,13 @@ while (have_posts()):
         <div class="container">
             <nav class="breadcrumb" aria-label="<?php esc_attr_e('Breadcrumb', 'affos'); ?>">
                 <a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Beranda', 'affos'); ?></a>
-                <span class="sep">&rsaquo;</span>
+                <span class="sep"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span>
                 <a href="<?php echo esc_url(get_post_type_archive_link('product')); ?>"><?php esc_html_e('Produk', 'affos'); ?></a>
                 <?php if ($category_name): ?>
-                    <span class="sep">&rsaquo;</span>
+                    <span class="sep"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span>
                     <a href="<?php echo esc_url(get_term_link($categories[0])); ?>"><?php echo esc_html($category_name); ?></a>
                 <?php endif; ?>
-                <span class="sep">&rsaquo;</span>
+                <span class="sep"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></span>
                 <span class="current-crumb" aria-current="page"><?php echo esc_html(get_the_title()); ?></span>
             </nav>
         </div>
