@@ -12,88 +12,25 @@ while (have_posts()):
     the_post();
     $product_id = get_the_ID();
 
-    // Get all meta data
-    $specs = array(
-        'network' => array(
-            'title' => __('Network', 'affos'),
-            'icon' => 'ri-signal-tower-line',
-            'fields' => array(
-                '_network_technology' => __('Technology', 'affos'),
-                '_network_2g_bands' => __('2G Bands', 'affos'),
-                '_network_3g_bands' => __('3G Bands', 'affos'),
-                '_network_4g_bands' => __('4G Bands', 'affos'),
-                '_network_5g_bands' => __('5G Bands', 'affos'),
-                '_network_speed' => __('Speed', 'affos'),
-            ),
-        ),
-        'body' => array(
-            'title' => __('Body', 'affos'),
-            'icon' => 'ri-smartphone-line',
-            'fields' => array(
-                '_body_dimensions' => __('Dimensions', 'affos'),
-                '_body_weight' => __('Weight', 'affos'),
-                '_body_sim' => __('SIM', 'affos'),
-                '_body_other' => __('Build', 'affos'),
-            ),
-        ),
-        'display' => array(
-            'title' => __('Display', 'affos'),
-            'icon' => 'ri-artboard-line',
-            'fields' => array(
-                '_display_type' => __('Type', 'affos'),
-                '_display_size' => __('Size', 'affos'),
-                '_display_resolution' => __('Resolution', 'affos'),
-                '_display_protection' => __('Protection', 'affos'),
-            ),
-        ),
-        'platform' => array(
-            'title' => __('Platform', 'affos'),
-            'icon' => 'ri-cpu-line',
-            'fields' => array(
-                '_platform_os' => __('OS', 'affos'),
-                '_platform_chipset' => __('Chipset', 'affos'),
-                '_platform_cpu' => __('CPU', 'affos'),
-                '_platform_gpu' => __('GPU', 'affos'),
-            ),
-        ),
-        'memory' => array(
-            'title' => __('Memory', 'affos'),
-            'icon' => 'ri-hard-drive-line',
-            'fields' => array(
-                '_memory_card_slot' => __('Card Slot', 'affos'),
-                '_memory_internal' => __('Internal', 'affos'),
-            ),
-        ),
-        'camera' => array(
-            'title' => __('Camera', 'affos'),
-            'icon' => 'ri-camera-lens-line',
-            'fields' => array(
-                '_camera_main_specs' => __('Main', 'affos'),
-                '_camera_main_features' => __('Features', 'affos'),
-                '_camera_main_video' => __('Video', 'affos'),
-                '_camera_selfie_specs' => __('Selfie', 'affos'),
-            ),
-        ),
-        'battery' => array(
-            'title' => __('Battery', 'affos'),
-            'icon' => 'ri-battery-charge-line',
-            'fields' => array(
-                '_battery_type' => __('Type', 'affos'),
-                '_battery_charging' => __('Charging', 'affos'),
-            ),
-        ),
-        'comms' => array(
-            'title' => __('Comms', 'affos'),
-            'icon' => 'ri-wifi-line',
-            'fields' => array(
-                '_comms_wlan' => __('WLAN', 'affos'),
-                '_comms_bluetooth' => __('Bluetooth', 'affos'),
-                '_comms_positioning' => __('Positioning', 'affos'),
-                '_comms_nfc' => __('NFC', 'affos'),
-                '_comms_usb' => __('USB', 'affos'),
-            ),
-        ),
-    );
+    // Get spec sections from centralized definition
+    $all_specs = affos_get_product_spec_sections();
+
+    // Build frontend-friendly spec array (key => label only, selected sections)
+    $frontend_sections = array('network', 'body', 'display', 'platform', 'memory', 'main_camera', 'selfie_camera', 'battery', 'comms', 'sound', 'features');
+    $specs = array();
+    foreach ($frontend_sections as $section_id) {
+        if (!isset($all_specs[$section_id])) continue;
+        $section = $all_specs[$section_id];
+        $fields = array();
+        foreach ($section['fields'] as $field_key => $field) {
+            $fields[$field_key] = $field['label'];
+        }
+        $specs[$section_id] = array(
+            'title' => $section['title'],
+            'icon' => $section['icon'],
+            'fields' => $fields,
+        );
+    }
 
     // Get quick specs
     $chipset = get_post_meta($product_id, '_platform_chipset', true);

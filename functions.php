@@ -403,6 +403,141 @@ function affos_compare_meta_description() {
 add_action('wp_head', 'affos_compare_meta_description', 1);
 
 /**
+ * Get product specification sections (single source of truth)
+ *
+ * Used by both the admin meta boxes and frontend spec display.
+ * Each field has: label (translatable), type (text or textarea).
+ *
+ * @return array
+ */
+function affos_get_product_spec_sections()
+{
+    return array(
+        'network' => array(
+            'title' => __('Network', 'affos'),
+            'icon' => 'ri-signal-tower-line',
+            'fields' => array(
+                '_network_technology' => array('label' => __('Technology', 'affos'), 'type' => 'text'),
+                '_network_2g_bands' => array('label' => __('2G Bands', 'affos'), 'type' => 'text'),
+                '_network_3g_bands' => array('label' => __('3G Bands', 'affos'), 'type' => 'text'),
+                '_network_4g_bands' => array('label' => __('4G Bands', 'affos'), 'type' => 'textarea'),
+                '_network_5g_bands' => array('label' => __('5G Bands', 'affos'), 'type' => 'textarea'),
+                '_network_speed' => array('label' => __('Speed', 'affos'), 'type' => 'text'),
+            ),
+        ),
+        'launch' => array(
+            'title' => __('Launch', 'affos'),
+            'icon' => 'ri-calendar-line',
+            'fields' => array(
+                '_launch_announced' => array('label' => __('Announced', 'affos'), 'type' => 'text'),
+                '_launch_status' => array('label' => __('Status', 'affos'), 'type' => 'text'),
+            ),
+        ),
+        'body' => array(
+            'title' => __('Body', 'affos'),
+            'icon' => 'ri-smartphone-line',
+            'fields' => array(
+                '_body_dimensions' => array('label' => __('Dimensions', 'affos'), 'type' => 'text'),
+                '_body_weight' => array('label' => __('Weight', 'affos'), 'type' => 'text'),
+                '_body_sim' => array('label' => __('SIM', 'affos'), 'type' => 'text'),
+                '_body_other' => array('label' => __('Build', 'affos'), 'type' => 'textarea'),
+            ),
+        ),
+        'display' => array(
+            'title' => __('Display', 'affos'),
+            'icon' => 'ri-artboard-line',
+            'fields' => array(
+                '_display_type' => array('label' => __('Type', 'affos'), 'type' => 'text'),
+                '_display_size' => array('label' => __('Size', 'affos'), 'type' => 'text'),
+                '_display_resolution' => array('label' => __('Resolution', 'affos'), 'type' => 'text'),
+                '_display_protection' => array('label' => __('Protection', 'affos'), 'type' => 'text'),
+                '_display_other' => array('label' => __('Other', 'affos'), 'type' => 'textarea'),
+            ),
+        ),
+        'platform' => array(
+            'title' => __('Platform', 'affos'),
+            'icon' => 'ri-cpu-line',
+            'fields' => array(
+                '_platform_os' => array('label' => __('OS', 'affos'), 'type' => 'text'),
+                '_platform_chipset' => array('label' => __('Chipset', 'affos'), 'type' => 'text'),
+                '_platform_cpu' => array('label' => __('CPU', 'affos'), 'type' => 'text'),
+                '_platform_gpu' => array('label' => __('GPU', 'affos'), 'type' => 'text'),
+            ),
+        ),
+        'memory' => array(
+            'title' => __('Memory', 'affos'),
+            'icon' => 'ri-hard-drive-line',
+            'fields' => array(
+                '_memory_card_slot' => array('label' => __('Card Slot', 'affos'), 'type' => 'text'),
+                '_memory_internal' => array('label' => __('Internal', 'affos'), 'type' => 'text'),
+            ),
+        ),
+        'main_camera' => array(
+            'title' => __('Main Camera', 'affos'),
+            'icon' => 'ri-camera-lens-line',
+            'fields' => array(
+                '_camera_main_specs' => array('label' => __('Specs', 'affos'), 'type' => 'textarea'),
+                '_camera_main_features' => array('label' => __('Features', 'affos'), 'type' => 'text'),
+                '_camera_main_video' => array('label' => __('Video', 'affos'), 'type' => 'text'),
+            ),
+        ),
+        'selfie_camera' => array(
+            'title' => __('Selfie Camera', 'affos'),
+            'icon' => 'ri-camera-line',
+            'fields' => array(
+                '_camera_selfie_specs' => array('label' => __('Selfie', 'affos'), 'type' => 'text'),
+                '_camera_selfie_features' => array('label' => __('Features', 'affos'), 'type' => 'text'),
+                '_camera_selfie_video' => array('label' => __('Video', 'affos'), 'type' => 'text'),
+            ),
+        ),
+        'sound' => array(
+            'title' => __('Sound', 'affos'),
+            'icon' => 'ri-volume-up-line',
+            'fields' => array(
+                '_sound_loudspeaker' => array('label' => __('Loudspeaker', 'affos'), 'type' => 'text'),
+                '_sound_jack' => array('label' => __('3.5mm Jack', 'affos'), 'type' => 'text'),
+            ),
+        ),
+        'comms' => array(
+            'title' => __('Comms', 'affos'),
+            'icon' => 'ri-wifi-line',
+            'fields' => array(
+                '_comms_wlan' => array('label' => __('WLAN', 'affos'), 'type' => 'text'),
+                '_comms_bluetooth' => array('label' => __('Bluetooth', 'affos'), 'type' => 'text'),
+                '_comms_positioning' => array('label' => __('Positioning', 'affos'), 'type' => 'text'),
+                '_comms_nfc' => array('label' => __('NFC', 'affos'), 'type' => 'text'),
+                '_comms_radio' => array('label' => __('Radio', 'affos'), 'type' => 'text'),
+                '_comms_usb' => array('label' => __('USB', 'affos'), 'type' => 'text'),
+            ),
+        ),
+        'features' => array(
+            'title' => __('Features', 'affos'),
+            'icon' => 'ri-settings-3-line',
+            'fields' => array(
+                '_features_sensors' => array('label' => __('Sensors', 'affos'), 'type' => 'textarea'),
+                '_features_other' => array('label' => __('Other', 'affos'), 'type' => 'textarea'),
+            ),
+        ),
+        'battery' => array(
+            'title' => __('Battery', 'affos'),
+            'icon' => 'ri-battery-charge-line',
+            'fields' => array(
+                '_battery_type' => array('label' => __('Type', 'affos'), 'type' => 'text'),
+                '_battery_charging' => array('label' => __('Charging', 'affos'), 'type' => 'text'),
+            ),
+        ),
+        'misc' => array(
+            'title' => __('Misc', 'affos'),
+            'icon' => 'ri-information-line',
+            'fields' => array(
+                '_misc_colors' => array('label' => __('Colors', 'affos'), 'type' => 'text'),
+                '_misc_price' => array('label' => __('Price', 'affos'), 'type' => 'text'),
+            ),
+        ),
+    );
+}
+
+/**
  * Get store info (name, logo, icon) for a store key
  * 
  * @param string $store_key Store key (shopee, tokopedia, blibli, other)
