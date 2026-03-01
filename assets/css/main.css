@@ -2830,9 +2830,15 @@ img.avatar {
 /* ============================================
    404 ERROR PAGE
    ============================================ */
-.error-body {
+.error404 {
     background: linear-gradient(135deg, var(--bg) 0%, var(--surface-inset) 100%);
 }
+
+/* Hide site chrome on 404 — full-page standalone design */
+.error404 .site-header,
+.error404 .site-footer,
+.error404 .mobile-nav-overlay,
+.error404 .skip-link { display: none; }
 
 .error-page-full {
     min-height: 100vh;

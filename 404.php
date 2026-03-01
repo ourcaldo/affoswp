@@ -2,24 +2,17 @@
 /**
  * 404 Error Page Template
  *
+ * Uses get_header()/get_footer() for proper WordPress integration.
+ * The site header and footer are hidden via CSS on .error404 body class.
+ *
  * @package Affos
  * @since 1.0.0
  */
 
-// Don't include header/footer for 404
+get_header();
 ?>
-<!DOCTYPE html>
-<html <?php language_attributes(); ?>>
 
-<head>
-    <meta charset="<?php bloginfo('charset'); ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php wp_head(); ?>
-</head>
-
-<body <?php body_class('error-body'); ?>>
-    <?php wp_body_open(); ?>
-
+<main id="main-content">
     <div class="error-page-full">
         <div class="error-content">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="error-logo">
@@ -96,8 +89,7 @@
         <div class="error-decor decor-2"></div>
         <div class="error-decor decor-3"></div>
     </div>
+</main>
 
-    <?php wp_footer(); ?>
-</body>
-
-</html>
+<?php
+get_footer();
