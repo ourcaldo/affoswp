@@ -26,6 +26,7 @@ function affos_autoload()
         'class-product-meta',
         'class-review-meta',
         'class-settings',
+        'class-schema',
     );
 
     foreach ($classes as $class) {
@@ -37,6 +38,9 @@ function affos_autoload()
 
     // Initialize CPT registration
     new Affos_CPT();
+
+    // Initialize structured data
+    new Affos_Schema();
 }
 add_action('after_setup_theme', 'affos_autoload', 1);
 
