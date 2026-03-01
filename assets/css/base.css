@@ -136,7 +136,7 @@ img {
     border-radius: var(--radius-full);
     font-weight: 600;
     font-size: 0.9rem;
-    z-index: 10000;
+    z-index: var(--z-toast);
     transition: top 0.2s ease;
 }
 

@@ -84,8 +84,36 @@ function affos_enqueue_assets()
         'nonce' => wp_create_nonce('affos_nonce'),
         'homeUrl' => home_url('/'),
     ));
+
+    // Compare page script
+    if (get_query_var('affos_compare')) {
+        wp_enqueue_script(
+            'affos-compare-page',
+            AFFOS_URI . '/assets/js/compare-page.js',
+            array(),
+            AFFOS_VERSION,
+            true
+        );
+        wp_localize_script('affos-compare-page', 'affosCompare', array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('affos_nonce'),
+            'compareUrl' => home_url('/bandingkan/'),
+            'hasUrlProducts' => (bool) get_query_var('compare_products', ''),
+        ));
+    }
 }
 add_action('wp_enqueue_scripts', 'affos_enqueue_assets');
+
+/**
+ * Async-load render-blocking icon font CSS
+ */
+function affos_async_icon_font($tag, $handle) {
+    if ($handle === 'affos-icons') {
+        return str_replace("media='all'", "media='print' onload=\"this.media='all'\"", $tag);
+    }
+    return $tag;
+}
+add_filter('style_loader_tag', 'affos_async_icon_font', 10, 2);
 
 /**
  * Add preconnect hints for external resources
@@ -318,6 +346,52 @@ function affos_compare_title($title)
 add_filter('pre_get_document_title', 'affos_compare_title');
 
 /**
+ * Add canonical URL for compare pages
+ */
+function affos_compare_canonical() {
+    if (!get_query_var('affos_compare')) {
+        return;
+    }
+    $compare_slug = get_query_var('compare_products', '');
+    if ($compare_slug) {
+        $canonical = home_url('/bandingkan/' . $compare_slug . '/');
+    } else {
+        $canonical = home_url('/bandingkan/');
+    }
+    echo '<link rel="canonical" href="' . esc_url($canonical) . '" />' . "\n";
+}
+add_action('wp_head', 'affos_compare_canonical', 1);
+
+/**
+ * Add meta description for compare pages
+ */
+function affos_compare_meta_description() {
+    if (!get_query_var('affos_compare')) {
+        return;
+    }
+    $compare_slug = get_query_var('compare_products', '');
+    if ($compare_slug) {
+        $slugs = explode('-vs-', $compare_slug);
+        $names = array();
+        foreach ($slugs as $slug) {
+            $product = get_page_by_path($slug, OBJECT, 'product');
+            if ($product) {
+                $names[] = $product->post_title;
+            }
+        }
+        if (count($names) >= 2) {
+            $desc = sprintf(__('Bandingkan spesifikasi dan harga %s secara lengkap.', 'affos'), implode(' vs ', $names));
+        } else {
+            $desc = __('Bandingkan spesifikasi dan harga gadget secara langsung.', 'affos');
+        }
+    } else {
+        $desc = __('Bandingkan spesifikasi dan harga gadget secara langsung.', 'affos');
+    }
+    echo '<meta name="description" content="' . esc_attr($desc) . '" />' . "\n";
+}
+add_action('wp_head', 'affos_compare_meta_description', 1);
+
+/**
  * Get store info (name, logo, icon) for a store key
  * 
  * @param string $store_key Store key (shopee, tokopedia, blibli, other)
@@ -416,6 +490,12 @@ function affos_get_compare_data()
 {
     check_ajax_referer('affos_nonce');
 
+    $throttle_key = 'affos_ajax_' . sanitize_key($_SERVER['REMOTE_ADDR']) . '_' . current_filter();
+    if (get_transient($throttle_key)) {
+        wp_send_json_error('Too many requests', 429);
+    }
+    set_transient($throttle_key, 1, 2); // 2 second cooldown
+
     $ids = isset($_GET['ids']) ? sanitize_text_field($_GET['ids']) : '';
 
     if (empty($ids)) {
@@ -468,6 +548,12 @@ function affos_get_compare_slugs()
 {
     check_ajax_referer('affos_nonce');
 
+    $throttle_key = 'affos_ajax_' . sanitize_key($_SERVER['REMOTE_ADDR']) . '_' . current_filter();
+    if (get_transient($throttle_key)) {
+        wp_send_json_error('Too many requests', 429);
+    }
+    set_transient($throttle_key, 1, 2); // 2 second cooldown
+
     $ids = isset($_GET['ids']) ? sanitize_text_field($_GET['ids']) : '';
 
     if (empty($ids)) {
@@ -501,6 +587,12 @@ add_action('wp_ajax_nopriv_affos_get_compare_slugs', 'affos_get_compare_slugs');
 function affos_get_compare_names()
 {
     check_ajax_referer('affos_nonce');
+
+    $throttle_key = 'affos_ajax_' . sanitize_key($_SERVER['REMOTE_ADDR']) . '_' . current_filter();
+    if (get_transient($throttle_key)) {
+        wp_send_json_error('Too many requests', 429);
+    }
+    set_transient($throttle_key, 1, 2); // 2 second cooldown
 
     $ids = isset($_GET['ids']) ? sanitize_text_field($_GET['ids']) : '';
 

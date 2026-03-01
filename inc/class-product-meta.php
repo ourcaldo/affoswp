@@ -253,78 +253,6 @@ class Affos_Product_Meta
                 ?>
             </div>
         </div>
-        <style>
-            .affos-meta-tabs {
-                background: #fff;
-                border: 1px solid #c3c4c7;
-            }
-
-            .affos-tab-nav {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0;
-                border-bottom: 1px solid #c3c4c7;
-                background: #f0f0f1;
-            }
-
-            .affos-tab-btn {
-                background: transparent;
-                border: none;
-                padding: 12px 16px;
-                cursor: pointer;
-                font-size: 13px;
-                color: #50575e;
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                transition: all 0.2s;
-            }
-
-            .affos-tab-btn:hover {
-                background: #fff;
-                color: #2563EB;
-            }
-
-            .affos-tab-btn.active {
-                background: #fff;
-                color: #2563EB;
-                border-bottom: 2px solid #2563EB;
-                margin-bottom: -1px;
-            }
-
-            .affos-tab-btn i {
-                font-size: 16px;
-            }
-
-            .affos-tab-panel {
-                display: none;
-                padding: 16px;
-            }
-
-            .affos-tab-panel.active {
-                display: block;
-            }
-
-            .affos-meta-table th {
-                width: 140px;
-                padding: 12px 10px 12px 0;
-            }
-
-            .affos-meta-table td {
-                padding: 8px 0;
-            }
-        </style>
-        <script>
-            jQuery(document).ready(function ($) {
-                $('.affos-tab-btn').on('click', function () {
-                    var tab = $(this).data('tab');
-                    $('.affos-tab-btn').removeClass('active');
-                    $('.affos-tab-panel').removeClass('active');
-                    $(this).addClass('active');
-                    $('.affos-tab-panel[data-panel="' + tab + '"]').addClass('active');
-                });
-            });
-        </script>
         <?php
     }
 
@@ -385,32 +313,7 @@ class Affos_Product_Meta
                 </button>
             </p>
         </div>
-        <script>
-            jQuery(document).ready(function ($) {
-                var rowIndex = <?php echo count($buy_links); ?>;
-                var storeOptions = <?php echo wp_json_encode($store_options); ?>;
-
-                $('#add-buy-link').on('click', function () {
-                    var optionsHtml = '';
-                    $.each(storeOptions, function (key, label) {
-                        optionsHtml += '<option value="' + key + '">' + label + '</option>';
-                    });
-
-                    var row = '<tr>' +
-                        '<td><select name="_product_buy_links[' + rowIndex + '][store_name]" class="regular-text" style="width: 100%;">' + optionsHtml + '</select></td>' +
-                        '<td><input type="url" name="_product_buy_links[' + rowIndex + '][store_url]" class="regular-text" placeholder="https://" style="width: 100%;" /></td>' +
-                        '<td><input type="text" name="_product_buy_links[' + rowIndex + '][store_price]" class="regular-text" placeholder="<?php esc_attr_e('e.g., Rp 24.999.000', 'affos'); ?>" style="width: 100%;" /></td>' +
-                        '<td><button type="button" class="button remove-buy-link"><span class="dashicons dashicons-trash"></span></button></td>' +
-                        '</tr>';
-                    $('#buy-links-body').append(row);
-                    rowIndex++;
-                });
-
-                $(document).on('click', '.remove-buy-link', function () {
-                    $(this).closest('tr').remove();
-                });
-            });
-        </script>
+        <script>var affosProductMeta = {rowIndex: <?php echo count($buy_links); ?>};</script>
         <?php
     }
 
@@ -521,6 +424,34 @@ class Affos_Product_Meta
                 array(),
                 '3.5.0'
             );
+
+            // Enqueue product meta box CSS
+            wp_enqueue_style(
+                'affos-admin-product-meta',
+                AFFOS_URI . '/assets/css/admin-product-meta.css',
+                array(),
+                AFFOS_VERSION
+            );
+
+            // Enqueue product meta box JS
+            wp_enqueue_script(
+                'affos-admin-product-meta',
+                AFFOS_URI . '/assets/js/admin-product-meta.js',
+                array('jquery'),
+                AFFOS_VERSION,
+                true
+            );
+
+            // Localize static data for the buy links script
+            wp_localize_script('affos-admin-product-meta', 'affosProductMetaL10n', array(
+                'storeOptions' => array(
+                    'shopee' => 'Shopee',
+                    'tokopedia' => 'Tokopedia',
+                    'blibli' => 'Blibli',
+                    'other' => 'Toko Lainnya',
+                ),
+                'pricePlaceholder' => __('e.g., Rp 24.999.000', 'affos'),
+            ));
         }
     }
 }

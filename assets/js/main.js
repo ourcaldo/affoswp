@@ -256,40 +256,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================
 
     const showToast = (message) => {
-        let toast = document.querySelector('.toast');
+        let toast = document.querySelector('.toast-notification');
         if (!toast) {
             toast = document.createElement('div');
-            toast.className = 'toast';
+            toast.className = 'toast-notification';
             toast.setAttribute('role', 'alert');
             toast.setAttribute('aria-live', 'polite');
-            toast.style.cssText = `
-                position: fixed;
-                bottom: 100px;
-                left: 50%;
-                transform: translateX(-50%) translateY(20px);
-                background: var(--ink, #0F172A);
-                color: white;
-                padding: 14px 28px;
-                border-radius: 12px;
-                font-size: 0.9rem;
-                font-weight: 500;
-                z-index: 9999;
-                opacity: 0;
-                transition: all 0.3s ease;
-                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            `;
             document.body.appendChild(toast);
         }
 
         toast.textContent = message;
         requestAnimationFrame(() => {
-            toast.style.opacity = '1';
-            toast.style.transform = 'translateX(-50%) translateY(0)';
+            toast.classList.add('show');
         });
 
         setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(-50%) translateY(20px)';
+            toast.classList.remove('show');
         }, 3000);
     };
 
@@ -624,5 +606,22 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
     initSearchToggle();
     initShowDiffOnly();
+
+    // ========================
+    // SHARE BUTTONS
+    // ========================
+
+    document.querySelectorAll('[data-share-url]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            window.open(this.dataset.shareUrl, '_blank');
+        });
+    });
+    document.querySelectorAll('[data-copy-url]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            navigator.clipboard.writeText(this.dataset.copyUrl)
+                .then(function() { alert('Link copied!'); })
+                .catch(function() {});
+        });
+    });
 
 });

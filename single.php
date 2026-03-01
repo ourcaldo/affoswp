@@ -116,16 +116,16 @@ while (have_posts()) : the_post();
 
             <!-- Share Row -->
             <div class="share-row">
-                <button class="share-btn" onclick="window.open('https://twitter.com/intent/tweet?url=<?php echo rawurlencode(get_permalink()); ?>&text=<?php echo rawurlencode(get_the_title()); ?>', '_blank')">
+                <button class="share-btn" data-share-url="<?php echo esc_attr('https://twitter.com/intent/tweet?url=' . rawurlencode(get_permalink()) . '&text=' . rawurlencode(get_the_title())); ?>">
                     <i class="ri-twitter-x-line" aria-hidden="true"></i> <?php esc_html_e('Twitter', 'affos'); ?>
                 </button>
-                <button class="share-btn" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode(get_permalink()); ?>', '_blank')">
+                <button class="share-btn" data-share-url="<?php echo esc_attr('https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode(get_permalink())); ?>">
                     <i class="ri-facebook-line" aria-hidden="true"></i> <?php esc_html_e('Facebook', 'affos'); ?>
                 </button>
-                <button class="share-btn" onclick="window.open('https://wa.me/?text=<?php echo rawurlencode(get_the_title() . ' ' . get_permalink()); ?>', '_blank')">
+                <button class="share-btn" data-share-url="<?php echo esc_attr('https://wa.me/?text=' . rawurlencode(get_the_title() . ' ' . get_permalink())); ?>">
                     <i class="ri-whatsapp-line" aria-hidden="true"></i> <?php esc_html_e('WhatsApp', 'affos'); ?>
                 </button>
-                <button class="share-btn" onclick="navigator.clipboard.writeText('<?php echo esc_js(get_permalink()); ?>').then(function(){alert('Link copied!')}).catch(function(){})">
+                <button class="share-btn" data-copy-url="<?php echo esc_attr(get_permalink()); ?>">
                     <i class="ri-link" aria-hidden="true"></i> <?php esc_html_e('Copy Link', 'affos'); ?>
                 </button>
             </div>
@@ -145,16 +145,16 @@ while (have_posts()) : the_post();
             <div class="sidebar-card">
                 <h4><?php esc_html_e('Bagikan', 'affos'); ?></h4>
                 <div class="sidebar-share-list">
-                    <button class="share-btn" onclick="window.open('https://twitter.com/intent/tweet?url=<?php echo rawurlencode(get_permalink()); ?>&text=<?php echo rawurlencode(get_the_title()); ?>', '_blank')">
+                    <button class="share-btn" data-share-url="<?php echo esc_attr('https://twitter.com/intent/tweet?url=' . rawurlencode(get_permalink()) . '&text=' . rawurlencode(get_the_title())); ?>">
                         <i class="ri-twitter-x-line" aria-hidden="true"></i> <?php esc_html_e('Twitter', 'affos'); ?>
                     </button>
-                    <button class="share-btn" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode(get_permalink()); ?>', '_blank')">
+                    <button class="share-btn" data-share-url="<?php echo esc_attr('https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode(get_permalink())); ?>">
                         <i class="ri-facebook-line" aria-hidden="true"></i> <?php esc_html_e('Facebook', 'affos'); ?>
                     </button>
-                    <button class="share-btn" onclick="window.open('https://wa.me/?text=<?php echo rawurlencode(get_the_title() . ' ' . get_permalink()); ?>', '_blank')">
+                    <button class="share-btn" data-share-url="<?php echo esc_attr('https://wa.me/?text=' . rawurlencode(get_the_title() . ' ' . get_permalink())); ?>">
                         <i class="ri-whatsapp-line" aria-hidden="true"></i> <?php esc_html_e('WhatsApp', 'affos'); ?>
                     </button>
-                    <button class="share-btn" onclick="navigator.clipboard.writeText('<?php echo esc_js(get_permalink()); ?>').then(function(){alert('Link copied!')}).catch(function(){})">
+                    <button class="share-btn" data-copy-url="<?php echo esc_attr(get_permalink()); ?>">
                         <i class="ri-link" aria-hidden="true"></i> <?php esc_html_e('Copy Link', 'affos'); ?>
                     </button>
                 </div>
