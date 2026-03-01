@@ -69,10 +69,13 @@ function affos_enqueue_assets()
         '3.5.0'
     );
 
-    // Main stylesheet (imports all modular CSS files)
+    // Use minified assets in production
+    $suffix = (defined('WP_DEBUG') && WP_DEBUG) ? '' : '.min';
+
+    // Main stylesheet
     wp_enqueue_style(
         'affos-theme',
-        AFFOS_URI . '/assets/css/main.css',
+        AFFOS_URI . '/assets/css/main' . $suffix . '.css',
         array('affos-fonts', 'affos-icons'),
         AFFOS_VERSION
     );
@@ -80,7 +83,7 @@ function affos_enqueue_assets()
     // Main JavaScript
     wp_enqueue_script(
         'affos-main',
-        AFFOS_URI . '/assets/js/main.js',
+        AFFOS_URI . '/assets/js/main' . $suffix . '.js',
         array(),
         AFFOS_VERSION,
         true
@@ -97,7 +100,7 @@ function affos_enqueue_assets()
     if (get_query_var('affos_compare')) {
         wp_enqueue_script(
             'affos-compare-page',
-            AFFOS_URI . '/assets/js/compare-page.js',
+            AFFOS_URI . '/assets/js/compare-page' . $suffix . '.js',
             array(),
             AFFOS_VERSION,
             true

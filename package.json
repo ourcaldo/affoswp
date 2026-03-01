@@ -1,0 +1,10 @@
+{
+  "name": "affos",
+  "private": true,
+  "description": "Affos WordPress theme build tools",
+  "scripts": {
+    "build:css": "node scripts/minify.mjs css",
+    "build:js": "node scripts/minify.mjs js",
+    "build": "node scripts/minify.mjs"
+  }
+}
