@@ -624,4 +624,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // ========================
+    // NEWSLETTER FORMS
+    // ========================
+    document.querySelectorAll('[data-newsletter]').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var emailInput = form.querySelector('input[type="email"]');
+            var btn = form.querySelector('button[type="submit"]');
+            if (!emailInput || !emailInput.value) return;
+
+            var originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '...';
+
+            var data = new FormData();
+            data.append('action', 'affos_newsletter_subscribe');
+            data.append('nonce', (typeof affosData !== 'undefined') ? affosData.nonce : '');
+            data.append('email', emailInput.value);
+
+            fetch((typeof affosData !== 'undefined') ? affosData.ajaxUrl : '/wp-admin/admin-ajax.php', {
+                method: 'POST',
+                body: data,
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(res) {
+                var msg = (res.data && typeof res.data === 'string') ? res.data : (res.success ? 'Berhasil!' : 'Gagal.');
+                btn.textContent = msg;
+                if (res.success) {
+                    emailInput.value = '';
+                }
+                setTimeout(function() {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }, 3000);
+            })
+            .catch(function() {
+                btn.textContent = 'Error';
+                setTimeout(function() {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }, 3000);
+            });
+        });
+    });
+
 });

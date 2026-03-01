@@ -164,8 +164,8 @@ while (have_posts()) : the_post();
             <div class="sidebar-card">
                 <h4><?php esc_html_e('Newsletter', 'affos'); ?></h4>
                 <p class="sidebar-desc"><?php esc_html_e('Dapatkan tips gadget langsung di inbox Anda.', 'affos'); ?></p>
-                <form action="#" method="post">
-                    <input type="email" placeholder="<?php esc_attr_e('Email Anda', 'affos'); ?>" class="sidebar-input" required aria-label="<?php esc_attr_e('Alamat email', 'affos'); ?>">
+                <form method="post" data-newsletter>
+                    <input type="email" name="email" placeholder="<?php esc_attr_e('Email Anda', 'affos'); ?>" class="sidebar-input" required aria-label="<?php esc_attr_e('Alamat email', 'affos'); ?>">
                     <button type="submit" class="btn-primary sidebar-btn-full"><?php esc_html_e('Langganan', 'affos'); ?></button>
                 </form>
             </div>

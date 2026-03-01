@@ -622,3 +622,39 @@ function affos_get_compare_names()
 }
 add_action('wp_ajax_affos_get_compare_names', 'affos_get_compare_names');
 add_action('wp_ajax_nopriv_affos_get_compare_names', 'affos_get_compare_names');
+
+/**
+ * Newsletter subscription AJAX handler
+ *
+ * Stores subscriber emails as a serialized option.
+ */
+function affos_newsletter_subscribe()
+{
+    check_ajax_referer('affos_nonce', 'nonce');
+
+    // Rate limiting
+    $throttle_key = 'affos_ajax_' . sanitize_key($_SERVER['REMOTE_ADDR']) . '_' . current_filter();
+    if (get_transient($throttle_key)) {
+        wp_send_json_error(__('Terlalu banyak permintaan. Coba lagi nanti.', 'affos'), 429);
+    }
+    set_transient($throttle_key, 1, 5);
+
+    $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
+
+    if (!is_email($email)) {
+        wp_send_json_error(__('Alamat email tidak valid.', 'affos'));
+    }
+
+    $subscribers = get_option('affos_newsletter_subscribers', array());
+
+    if (in_array($email, $subscribers, true)) {
+        wp_send_json_error(__('Email ini sudah terdaftar.', 'affos'));
+    }
+
+    $subscribers[] = $email;
+    update_option('affos_newsletter_subscribers', $subscribers);
+
+    wp_send_json_success(__('Terima kasih! Anda telah berlangganan.', 'affos'));
+}
+add_action('wp_ajax_affos_newsletter_subscribe', 'affos_newsletter_subscribe');
+add_action('wp_ajax_nopriv_affos_newsletter_subscribe', 'affos_newsletter_subscribe');
