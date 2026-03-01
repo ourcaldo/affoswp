@@ -27,6 +27,7 @@ function affos_autoload()
         'class-review-meta',
         'class-settings',
         'class-schema',
+        'class-social-meta',
     );
 
     foreach ($classes as $class) {
@@ -41,6 +42,9 @@ function affos_autoload()
 
     // Initialize structured data
     new Affos_Schema();
+
+    // Initialize social meta tags
+    new Affos_Social_Meta();
 }
 add_action('after_setup_theme', 'affos_autoload', 1);
 
